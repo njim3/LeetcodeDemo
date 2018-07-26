@@ -172,9 +172,61 @@ char* longestCommonPrefix(char** strs, int strsSize) {
     return resStr;
 }
 
+/*
+ * 20. Valid Parentheses
+ */
+bool isMatchParentheses(char s1, char s2) {
+    if (((s1 == '(') && (s2 == ')')) ||
+        ((s1 == '{') && (s2 == '}')) ||
+        ((s1 == '[') && (s2 == ']'))) {
+        return true;
+    }
+    
+    return false;
+}
+
+bool isValid(char* s) {
+    int strLen = (int)strlen(s);
+    
+    if (strLen % 2)
+        return false;
+    
+    if (strLen == 0)
+        return true;
+    
+    // 判断是对称匹配还是相邻匹配
+    bool isSymmetryMatch = isMatchParentheses(s[0], s[strLen - 1]);
+    bool isAdjacentMatch = isMatchParentheses(s[0], s[1]);
+    
+    if (!isSymmetryMatch && !isAdjacentMatch)
+        return false;
+    
+    int i = 0;
+    for (i = 0; i < (strLen / 2); ++i) {
+        if (isSymmetryMatch) {
+            if (isMatchParentheses(s[i], s[strLen - i - 1]))
+                continue;
+            else
+                break;
+        } else {
+            if (isAdjacentMatch) {
+                if (isMatchParentheses(s[i * 2], s[i * 2 + 1]))
+                    continue;
+                else
+                    break;
+            }
+        }
+    }
+    
+    if (i == strLen / 2)
+        return true;
+    
+    return false;
+}
+
+
 int main(int argc, char* argv[]) {
-    char* strs[] = {"c", "c"};
-    printf("%s\n", longestCommonPrefix(strs, 2));
+    printf("%d", isValid("(([]){})"));
     
     
     return 0;
