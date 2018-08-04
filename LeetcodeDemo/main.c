@@ -222,11 +222,114 @@ bool isValid(char* s) {
  * 21. Merge Two Sorted Lists
  * URL: https://leetcode.com/problems/merge-two-sorted-lists/
  */
+struct ListNode {
+    int val;
+    struct ListNode* next;
+};
+
+struct ListNode* mergeTwoLists(struct ListNode* l1, struct ListNode* l2) {
+    if (l1 == NULL || l2 == NULL) {
+        return l1 == NULL ? l2 : l1;
+    }
+    
+    struct ListNode* nodep = l1->val > l2->val ? l2 : l1;
+    struct ListNode* lastPriorNodep = NULL;
+    
+    while (l1 != NULL && l2 != NULL) {
+        if (l1->val > l2->val) {
+            if (l2->next != NULL && l2->next->val >= l1->val) {
+                struct ListNode* tmpNodep = l1->next;
+                
+                l1->next = l2->next;
+                l2->next = l1;
+                
+                l1 = tmpNodep;
+            } else {
+                if (l2->next == NULL)
+                    lastPriorNodep = l2;
+                
+                l2 = l2->next;
+            }
+        } else {
+            if (l1->next != NULL && l1->next->val >= l2->val) {
+                struct ListNode* tmpNodep = l2->next;
+                
+                l2->next = l1->next;
+                l1->next = l2;
+                
+                l2 = tmpNodep;
+            } else {
+                if (l1->next == NULL)
+                    lastPriorNodep = l1;
+                
+                l1 = l1->next;
+            }
+        }
+    }
+    
+    if (lastPriorNodep) {
+        while (lastPriorNodep->next) {
+            lastPriorNodep = lastPriorNodep->next;
+        }
+        
+        if (l1 == NULL) {
+            lastPriorNodep->next = l2;
+        } else if (l2 == NULL) {
+            lastPriorNodep->next = l1;
+        }
+    }
+    
+    return nodep;
+}
+
+struct ListNode* createList(int* arr, int length) {
+    struct ListNode* head = NULL, * cursorNodep = NULL;
+    
+    for (int i = 0; i < length; ++i) {
+        struct ListNode* nodep = (struct ListNode*)malloc(sizeof(struct ListNode));
+        
+        nodep->val = arr[i];
+        nodep->next = NULL;
+        
+        if (i == 0) {
+            head = nodep;
+            cursorNodep = head;
+        } else {
+            cursorNodep->next = nodep;
+            cursorNodep = cursorNodep->next;
+        }
+    }
+    
+    return head;
+}
+
+void traverseList(struct ListNode* head) {
+    int count = 0;
+    while (head != NULL) {
+        printf("%d%s", head->val, head->next ? "->" : "");
+        
+        head = head->next;
+        ++count;
+    }
+    
+    printf("\nCount: %d\n", count);
+}
 
 
 int main(int argc, char* argv[]) {
-    printf("%d\n", isValid("((({{{[[[]]]}}})))"));
+//    int arr1[5] = {-4,-2,0,1,4}, arr2[9] = {-9,-8,-6,-6,-5,-1,1,4,9};
+//    int arr1[7] = {-10,-9,-6,-4,1,9,9}, arr2[6] = {-5,-3,0,7,8,8};
+    int arr1[7] = {-9,-5,-3,-2,-2,3,7}, arr2[6] = {-10,-8,-4,-3,-1,3};
     
+    struct ListNode* l1 = createList(arr1, 7);
+    struct ListNode* l2 = createList(arr2, 6);
+    
+    traverseList(l1);
+    traverseList(l2);
+    
+    struct ListNode* mergeListHead = mergeTwoLists(l1, l2);
+    
+    traverseList(mergeListHead);
     
     return 0;
 }
