@@ -315,21 +315,42 @@ void traverseList(struct ListNode* head) {
     printf("\nCount: %d\n", count);
 }
 
+/*
+ * 26. Remove Duplicates from Sorted Array
+ * URL: https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+ */
+int removeDuplicates(int* nums, int numsSize) {
+    if (nums == NULL || numsSize == 0)
+        return 0;
+    
+    if (numsSize == 1)
+        return 1;
+    
+    int arrCount = 0;
+    
+    for (int i = 0; i < numsSize; ++i) {
+        if (nums[i] != nums[i + 1]) {
+            nums[arrCount++] = nums[i];
+        } else {
+            while (nums[i] == nums[i + 1])
+                ++i;
+            
+            nums[arrCount++] = nums[i];
+        }
+    }
+    
+    return arrCount;
+}
+
 
 int main(int argc, char* argv[]) {
-//    int arr1[5] = {-4,-2,0,1,4}, arr2[9] = {-9,-8,-6,-6,-5,-1,1,4,9};
-//    int arr1[7] = {-10,-9,-6,-4,1,9,9}, arr2[6] = {-5,-3,0,7,8,8};
-    int arr1[7] = {-9,-5,-3,-2,-2,3,7}, arr2[6] = {-10,-8,-4,-3,-1,3};
+    int arr[5] = {0,0,0,0,0};
+    int len = removeDuplicates(arr, 5);
     
-    struct ListNode* l1 = createList(arr1, 7);
-    struct ListNode* l2 = createList(arr2, 6);
+    printf("%d\n", len);
     
-    traverseList(l1);
-    traverseList(l2);
-    
-    struct ListNode* mergeListHead = mergeTwoLists(l1, l2);
-    
-    traverseList(mergeListHead);
+    for (int i = 0; i < len; ++i)
+        printf("%d ", arr[i]);
     
     return 0;
 }
