@@ -174,59 +174,58 @@ char* longestCommonPrefix(char** strs, int strsSize) {
 
 /*
  * 20. Valid Parentheses
+ * URL: https://leetcode.com/problems/valid-parentheses/
  */
-bool isMatchParentheses(char s1, char s2) {
-    if (((s1 == '(') && (s2 == ')')) ||
-        ((s1 == '{') && (s2 == '}')) ||
-        ((s1 == '[') && (s2 == ']'))) {
+bool isMatch(char curCh, char topCh) {
+    if ((curCh == ']' && topCh == '[') ||
+        (curCh == '}' && topCh == '{') ||
+        (curCh == ')' && topCh == '('))
         return true;
-    }
     
     return false;
 }
 
 bool isValid(char* s) {
-    int strLen = (int)strlen(s);
-    
-    if (strLen % 2)
-        return false;
+    unsigned long strLen = strlen(s);
     
     if (strLen == 0)
         return true;
     
-    // 判断是对称匹配还是相邻匹配
-    bool isSymmetryMatch = isMatchParentheses(s[0], s[strLen - 1]);
-    bool isAdjacentMatch = isMatchParentheses(s[0], s[1]);
-    
-    if (!isSymmetryMatch && !isAdjacentMatch)
+    if (strLen % 2 == 1)
         return false;
     
-    int i = 0;
-    for (i = 0; i < (strLen / 2); ++i) {
-        if (isSymmetryMatch) {
-            if (isMatchParentheses(s[i], s[strLen - i - 1]))
-                continue;
-            else
-                break;
+    char* stackArr = (char*)malloc(sizeof(char) * (strLen / 2));
+    int cursor = -1;
+    
+    for (int i = 0; i < strLen; ++i) {
+        char curCh = s[i];
+        char topCh = ((cursor == -1) ? '\0' : stackArr[cursor]);
+        bool isMatchRes = isMatch(curCh, topCh);
+        
+        if (isMatchRes) {
+            stackArr[cursor--] = '\0';
         } else {
-            if (isAdjacentMatch) {
-                if (isMatchParentheses(s[i * 2], s[i * 2 + 1]))
-                    continue;
-                else
-                    break;
-            }
+            if (++cursor >= (strLen / 2))
+                return false;
+            
+            stackArr[cursor] = curCh;
         }
     }
     
-    if (i == strLen / 2)
+    if (cursor == -1)
         return true;
     
     return false;
 }
 
+/*
+ * 21. Merge Two Sorted Lists
+ * URL: https://leetcode.com/problems/merge-two-sorted-lists/
+ */
+
 
 int main(int argc, char* argv[]) {
-    printf("%d", isValid("(([]){})"));
+    printf("%d\n", isValid("((({{{[[[]]]}}})))"));
     
     
     return 0;
