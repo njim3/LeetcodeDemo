@@ -366,15 +366,48 @@ int removeElement(int* nums, int numsSize, int val) {
     return arrCount;
 }
 
+/*
+ * 28. Implement strStr()
+ * URL: https://leetcode.com/problems/implement-strstr/
+ */
+int strStr(char* haystack, char* needle) {
+    unsigned long hLength = strlen(haystack);
+    unsigned long nLength = strlen(needle);
+    
+    if (nLength == 0)
+        return 0;
+    
+    if (hLength < nLength)
+        return -1;
+    
+    int i = 0, j = 0, res = -1;
+    
+    while (i < hLength && j < nLength) {
+        if (haystack[i] == needle[j]) {
+            if (j == 0)
+                res = i;
+            
+            ++i;
+            ++j;
+        } else {
+            ++i;
+            j = 0;
+            
+            if (res != -1) {
+                i = res + 1;    // 匹配部分
+                res = -1;
+            }
+        }
+    }
+    
+    if (j == nLength)
+        return res;
+    
+    return -1;
+}
 
 int main(int argc, char* argv[]) {
-    int arr[8] = {0,1,2,2,3,0,4,2};
-    int len = removeElement(arr, 8, 2);
-    
-    printf("%d\n", len);
-    
-    for (int i = 0; i < len; ++i)
-        printf("%d ", arr[i]);
+    printf("%d", strStr("hello", "ll"));
     
     return 0;
 }
