@@ -342,10 +342,34 @@ int removeDuplicates(int* nums, int numsSize) {
     return arrCount;
 }
 
+/*
+ * 27. Remove Element
+ * URL: https://leetcode.com/problems/remove-element/
+ */
+int removeElement(int* nums, int numsSize, int val) {
+    int arrCount = 0;
+    
+    for (int i = 0; i < numsSize; ++i) {
+        if (nums[i] != val) {
+            nums[arrCount++] = nums[i];
+        } else {
+            while (nums[i] == val) {
+                ++i;
+            }
+            
+            if (i < numsSize) {
+                nums[arrCount++] = nums[i];
+            }
+        }
+    }
+    
+    return arrCount;
+}
+
 
 int main(int argc, char* argv[]) {
-    int arr[5] = {0,0,0,0,0};
-    int len = removeDuplicates(arr, 5);
+    int arr[8] = {0,1,2,2,3,0,4,2};
+    int len = removeElement(arr, 8, 2);
     
     printf("%d\n", len);
     
