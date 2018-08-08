@@ -406,8 +406,27 @@ int strStr(char* haystack, char* needle) {
     return -1;
 }
 
+/*
+ * 35. Search Insert Position
+ * URL: https://leetcode.com/problems/search-insert-position/
+ */
+int searchInsert(int* nums, int numsSize, int target) {
+    if (numsSize == 0) {
+        return -1;
+    }
+    
+    for (int i = 0; i < numsSize; ++i) {
+        if ((nums[i] - target) >= 0)
+            return i;
+    }
+    
+    return numsSize;
+}
+
+
 int main(int argc, char* argv[]) {
-    printf("%d", strStr("hello", "ll"));
+    int arr[4] = {1, 3, 5, 6};
+    printf("%d", searchInsert(arr, 4, 0));
     
     return 0;
 }
