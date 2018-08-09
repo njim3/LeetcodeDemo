@@ -423,10 +423,54 @@ int searchInsert(int* nums, int numsSize, int target) {
     return numsSize;
 }
 
+/*
+ * 38. Count and Say
+ * URL: https://leetcode.com/problems/count-and-say/
+ */
+char* countAndSay(int n) {
+    if (n == 1)
+        return "1";
+    
+    // 初始结果，即当n=1时
+    char* curRes = malloc(sizeof(char) * 2);
+    curRes[0] = '1';
+    curRes[1] = 0;
+
+    for (int i = 2; i <= n; ++i) {
+        unsigned long length = strlen(curRes);
+        char* temp = (char*)malloc(sizeof(char) * length * 3);
+        
+        memset(temp, 0, 3 * length);    // 声明的长度为当前长度*3，以防溢出
+        int count = 1, cursor = 0;      // count为当前数字的数量，cursor为结果数组的指针
+        
+        for (int index = 1; index < length; ++index) {
+            if (curRes[index] == curRes[index - 1]) {   // 判断当前和前面的是否相同，相同则计数，不同则赋值
+                ++count;
+            } else {
+                // 置位置
+                temp[cursor++] = count + '0';
+                temp[cursor++] = curRes[index - 1];
+                
+                count = 1;
+            }
+        }
+        
+        // 循环结束后，最后需要对结尾字符进行赋值
+        temp[cursor++] = count + '0';
+        temp[cursor] = curRes[length - 1];
+        free(curRes);
+        
+        curRes = temp;
+    }
+    
+    return curRes;
+}
+
 
 int main(int argc, char* argv[]) {
-    int arr[4] = {1, 3, 5, 6};
-    printf("%d", searchInsert(arr, 4, 0));
+    for (int i = 1; i < 14; ++i) {
+        printf("%2d\t%s\n", i, countAndSay(i));
+    }
     
     return 0;
 }
