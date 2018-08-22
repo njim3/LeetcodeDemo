@@ -466,11 +466,34 @@ char* countAndSay(int n) {
     return curRes;
 }
 
+/*
+ * 53. Maximum Subarray
+ * URL: https://leetcode.com/problems/maximum-subarray/
+ */
+int maxSubArray(int* nums, int numsSize) {
+    if (numsSize <= 0)
+        return 0;
+    
+    int maxSum = nums[0];       // 初始设置第一个最大
+    int sum = 0;                // 子串的sum
+    
+    for (int i = 0; i < numsSize; ++i) {
+        sum += nums[i];
+        maxSum = maxSum > sum ? maxSum : sum;
+        
+        if (sum < 0)        // 如果子串和小于0，那必有array[k...j]大于0，此处重新计数
+            sum = 0;
+    }
+    
+    return maxSum;
+}
+
 
 int main(int argc, char* argv[]) {
-    for (int i = 1; i < 14; ++i) {
-        printf("%2d\t%s\n", i, countAndSay(i));
-    }
+    int arr[9] = {-2,1,-3,4,-1,2,1,-5,4};
+    
+    printf("%d\n", maxSubArray(arr, 9));
+    
     
     return 0;
 }
