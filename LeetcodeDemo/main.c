@@ -490,7 +490,7 @@ int maxSubArray(int* nums, int numsSize) {
 
 /*
  * 58. Length of Last Word
- * URL: https://leetcode.com/problems/maximum-subarray/
+ * URL: https://leetcode.com/problems/length-of-last-word/
  */
 int lengthOfLastWord(char* s) {
     
@@ -517,12 +517,62 @@ int lengthOfLastWord(char* s) {
     return wordLen;
 }
 
+/*
+ * 66. Plus One
+ * URL: https://leetcode.com/problems/plus-one/
+ */
+int* plusOne(int* digits, int digitsSize, int* returnSize) {
+    if (digitsSize == 0)
+        return NULL;
+    
+    bool needCarry = false;
+    
+    for (int i = digitsSize - 1; i >= 0; --i) {
+        int curRes = digits[i] + ((i == digitsSize - 1) ? 1 : 0) + (needCarry ? 1 : 0);
+        
+        if (curRes >= 10) {
+            needCarry = true;
+            digits[i] = curRes % 10;
+        } else {
+            needCarry = false;
+            digits[i] = curRes;
+        }
+    }
+    
+    *returnSize = needCarry ? digitsSize + 1 : digitsSize;
+    int* returnDigits = (int*)malloc(sizeof(int) * (*returnSize));
+    
+    for (int i = 0; i < digitsSize; ++i) {
+        if (needCarry) {
+            if (i == 0) {
+                returnDigits[0] = 1;
+                returnDigits[1] = 0;
+            } else {
+                returnDigits[i + 1] = digits[i];
+            }
+            
+        } else {
+            returnDigits[i] = digits[i];
+        }
+    }
+    
+    return returnDigits;
+}
+
 
 int main(int argc, char* argv[]) {
-    char* s = "       aaaa    ";
+//    int a[39] = {7,2,8,5,0,9,1,2,9,5,3,6,6,7,3,2,8,4,3,7,9,5,7,7,4,7,4,9,4,7,0,1,1,1,7,4,0,0,6};
+    int a[3] = {0, 0, 1};
+    int digitsSize = 3;
+    int returnSize = 0;
     
-    printf("%d\n", lengthOfLastWord(s));
+    int* addOneArr = plusOne(a, digitsSize, &returnSize);
     
+    for (int i = 0; i < returnSize; ++i) {
+        printf("%d%s", addOneArr[i], i == returnSize - 1 ? "\n" : ", ");
+    }
+    
+    free(addOneArr);
     
     return 0;
 }
