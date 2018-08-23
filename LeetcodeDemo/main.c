@@ -488,11 +488,40 @@ int maxSubArray(int* nums, int numsSize) {
     return maxSum;
 }
 
+/*
+ * 58. Length of Last Word
+ * URL: https://leetcode.com/problems/maximum-subarray/
+ */
+int lengthOfLastWord(char* s) {
+    
+    if (s == NULL)
+        return 0;
+    
+    int len = (int)strlen(s);
+    int wordLen = 0;
+    bool isPassCh = false;       // 是否找到第一个非空格字符
+    
+    for (int i = len - 1; i >= 0; --i) {
+        if (s[i] == ' ') {
+            if (isPassCh) {
+                break;
+            } else {
+                continue;
+            }
+        }
+        
+        isPassCh = true;
+        ++wordLen;
+    }
+    
+    return wordLen;
+}
+
 
 int main(int argc, char* argv[]) {
-    int arr[9] = {-2,1,-3,4,-1,2,1,-5,4};
+    char* s = "       aaaa    ";
     
-    printf("%d\n", maxSubArray(arr, 9));
+    printf("%d\n", lengthOfLastWord(s));
     
     
     return 0;
