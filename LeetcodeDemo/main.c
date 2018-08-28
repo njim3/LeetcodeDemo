@@ -559,6 +559,48 @@ int* plusOne(int* digits, int digitsSize, int* returnSize) {
     return returnDigits;
 }
 
+/*
+ * 67. Add Binary
+ * URL: https://leetcode.com/problems/add-binary/
+ */
+char* addBinary(char* a, char* b) {
+    int aLen = (int)strlen(a);
+    int bLen = (int)strlen(b)
+    
+    if (aLen == 0 || bLen == 0)
+        return aLen == 0 ? bLen : aLen;
+    
+    int len = aLen > bLen ? aLen : bLen;
+    int* aIntp = (int*)malloc(sizeof(int) * len);
+    int* bIntp = (int*)malloc(sizeof(int) * len);
+    
+    for (int i = 0; i < len; ++i) {
+        int strIndex = len - 1 - i;
+        
+        aIntp[i] = strIndex >= aLen ? 0 : a[strIndex] - '0';
+        bIntp[i] = strIndex >= bLen ? 0 : b[strIndex] - '0';
+    }
+    
+    // add two int array
+    bool carry = false;
+    
+    for (int i = 0; i < len; ++i) {
+        int tmpRes = aIntp[i] + bIntp[i];
+        
+        if (tmpRes >= 2) {
+            carry = true;
+            
+            aIntp[i] = tmpRes % 2;
+        } else
+            aIntp[i] = tmpRes;
+    }
+    
+    char* resCh = (char*)malloc(sizeof(char) * )
+    
+    
+    
+}
+
 
 int main(int argc, char* argv[]) {
 //    int a[39] = {7,2,8,5,0,9,1,2,9,5,3,6,6,7,3,2,8,4,3,7,9,5,7,7,4,7,4,9,4,7,0,1,1,1,7,4,0,0,6};
