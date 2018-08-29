@@ -617,16 +617,26 @@ char* addBinary(char* a, char* b) {
     return resCh;
 }
 
+/*
+ * 69. Sqrt(x)
+ * URL: https://leetcode.com/problems/sqrtx/
+ */
+int mySqrt(int x) {
+    int xAbso = x < 0 ? -x : x;
+    
+    if (xAbso == 0 || xAbso == 1)
+        return x;
+    
+    long i = 1;
+    while (i * i <= xAbso)
+        ++i;
+    
+    return (int)i - 1;
+}
 
 int main(int argc, char* argv[]) {
 
-    char* a = "1111011001010001111100100011101110011101100101110011001000110000111001010010100", * b = "1101001000101110000000001001001111011111000111101101100000110001110101000011001101111100";
-    
-    char* addRes = addBinary(a, b);
-    
-    printf("%s\n", addRes);
-    
-    free(addRes);
+    printf("%d\n", mySqrt(2147395600));
     
     return 0;
 }
