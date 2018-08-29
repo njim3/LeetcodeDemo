@@ -565,56 +565,68 @@ int* plusOne(int* digits, int digitsSize, int* returnSize) {
  */
 char* addBinary(char* a, char* b) {
     int aLen = (int)strlen(a);
-    int bLen = (int)strlen(b)
+    int bLen = (int)strlen(b);
     
     if (aLen == 0 || bLen == 0)
-        return aLen == 0 ? bLen : aLen;
+        return aLen == 0 ? b : a;
     
     int len = aLen > bLen ? aLen : bLen;
     int* aIntp = (int*)malloc(sizeof(int) * len);
     int* bIntp = (int*)malloc(sizeof(int) * len);
     
     for (int i = 0; i < len; ++i) {
-        int strIndex = len - 1 - i;
+        int aStrIndex = aLen - 1 - i;
+        int bStrIndex = bLen - 1 - i;
         
-        aIntp[i] = strIndex >= aLen ? 0 : a[strIndex] - '0';
-        bIntp[i] = strIndex >= bLen ? 0 : b[strIndex] - '0';
+        aIntp[i] = aStrIndex < 0 ? 0 : a[aStrIndex] - '0';
+        bIntp[i] = bStrIndex < 0 ? 0 : b[bStrIndex] - '0';
     }
     
     // add two int array
     bool carry = false;
     
     for (int i = 0; i < len; ++i) {
-        int tmpRes = aIntp[i] + bIntp[i];
+        int tmpRes = aIntp[i] + bIntp[i] + (carry ? 1 : 0);
         
         if (tmpRes >= 2) {
             carry = true;
             
             aIntp[i] = tmpRes % 2;
-        } else
+        } else {
+            carry = false;
+            
             aIntp[i] = tmpRes;
+        }
     }
     
-    char* resCh = (char*)malloc(sizeof(char) * )
+    int resLen = carry ? len + 1 : len;
+    char* resCh = (char*)malloc(sizeof(char) * (resLen + 1));
+    resCh[resLen] = '\0';
     
+    if (carry) {
+        resCh[0] = '1';
+    }
     
+    for (int i = len - 1, j = 0; i >= 0; --i, ++j) {
+        resCh[(carry ? j + 1 : j)] = aIntp[i] + '0';
+    }
     
+    free(aIntp);
+    free(bIntp);
+    
+    return resCh;
 }
 
 
 int main(int argc, char* argv[]) {
-//    int a[39] = {7,2,8,5,0,9,1,2,9,5,3,6,6,7,3,2,8,4,3,7,9,5,7,7,4,7,4,9,4,7,0,1,1,1,7,4,0,0,6};
-    int a[3] = {0, 0, 1};
-    int digitsSize = 3;
-    int returnSize = 0;
+
+    char* a = "1111011001010001111100100011101110011101100101110011001000110000111001010010100", * b = "1101001000101110000000001001001111011111000111101101100000110001110101000011001101111100";
     
-    int* addOneArr = plusOne(a, digitsSize, &returnSize);
+    char* addRes = addBinary(a, b);
     
-    for (int i = 0; i < returnSize; ++i) {
-        printf("%d%s", addOneArr[i], i == returnSize - 1 ? "\n" : ", ");
-    }
+    printf("%s\n", addRes);
     
-    free(addOneArr);
+    free(addRes);
     
     return 0;
 }
