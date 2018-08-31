@@ -656,6 +656,7 @@ int climbStairs(int n) {
 
 /*
  * 83. Remove Duplicates from Sorted List
+ * URL: https://leetcode.com/problems/remove-duplicates-from-sorted-list/
  */
 struct ListNode* deleteDuplicates(struct ListNode* head) {
     if (head == NULL)
@@ -687,14 +688,60 @@ struct ListNode* deleteDuplicates(struct ListNode* head) {
     return head;
 }
 
+/*
+ * 88. Merge Sorted Array
+ * URL: https://leetcode.com/problems/merge-sorted-array/
+ */
+void merge(int* nums1, int m, int* nums2, int n) {
+//    int nums1Len = strlen(nums1);
+//
+//    if (nums1Len < (m + n))
+//        return ;
+    
+    int nIndex = 0;
+    int insertPos = 0;
+    
+    while (nIndex < n) {
+        while (insertPos < m) {
+            if (nums2[nIndex] < nums1[insertPos])
+                break;
+            
+            ++insertPos;
+        }
+        
+        if (insertPos == m)
+            break;
+        
+        // insert
+        for (int i = m - 1; i >= insertPos; --i) {
+            nums1[i + 1] = nums1[i];
+        }
+        
+        nums1[insertPos] = nums2[nIndex++];
+        ++m;
+    }
+    
+    if (insertPos == m && nIndex < n) {
+        while (nIndex < n) {
+            nums1[insertPos++] = nums2[nIndex++];
+        }
+    }
+}
+
 
 int main(int argc, char* argv[]) {
-    int arr[9] = {1, 1, 1, 2, 2, 3, 4, 5, 5};
+
+    int num1[9] = {-1,0,0,3,3,3,0,0,0};
+    int num2[3] = {1,2,2};
     
-    struct ListNode* head = createList(arr, 9);
-    struct ListNode* res = deleteDuplicates(head);
+    merge(num1, 6, num2, 3);
     
-    traverseList(res);
+    for (int i = 0; i < 9; ++i) {
+        printf("%d ", num1[i]);
+    }
+    
+    printf("\n");
+    
     
     return 0;
 }
