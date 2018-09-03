@@ -48,6 +48,39 @@ void traverseList(struct ListNode* head) {
     printf("\nCount: %d\n", count);
 }
 
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+
+struct TreeNode* createTree(int* arr, int index, int length) {
+    struct TreeNode* pNode = NULL;
+    
+    if (index < length && arr[index] != -1) {
+        pNode = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+        
+        if (pNode == NULL)
+            return NULL;
+        
+        pNode->val = arr[index];
+        pNode->left = createTree(arr, 2 * index + 1, length);
+        pNode->right = createTree(arr, 2 * index + 2, length);
+    }
+    
+    return pNode;
+}
+
+void preorderTraverse(struct TreeNode* root) {
+    if (root == NULL)
+        return ;
+    
+    printf("%d ", root->val);
+    
+    preorderTraverse(root->left);
+    preorderTraverse(root->right);
+}
+
 /*
  * 7. Reverse Integer
  */
@@ -728,19 +761,64 @@ void merge(int* nums1, int m, int* nums2, int n) {
     }
 }
 
+/*
+ * 100. Same Tree
+ * URL: https://leetcode.com/problems/same-tree/
+ */
+bool isSameTree(struct TreeNode* p, struct TreeNode* q) {
+    if (p == NULL && q == NULL)
+        return true;
+    else if (p == NULL || q == NULL)
+        return false;
+    
+    if (p->val != q->val)
+        return false;
+    
+    return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+}
+
+/*
+ * 101. Symmetric Tree
+ * URL: https://leetcode.com/problems/symmetric-tree/
+ */
+bool isSym(struct TreeNode* left, struct TreeNode* right) {
+    if (left == NULL && right == NULL)
+        return true;
+    else if (left == NULL || right == NULL)
+        return false;
+    
+    if (left->val != right->val)
+        return false;
+    
+    return isSym(left->left, right->right) && isSym(left->right, right->left);
+}
+
+bool isSymmetric(struct TreeNode* root) {
+    if (root == NULL)
+        return true;
+    
+    return isSym(root->left, root->right);
+}
+
+/*
+ * 104. Maximum Depth of Binary Tree
+ * URL: https://leetcode.com/problems/maximum-depth-of-binary-tree/
+ */
+int maxDepth(struct TreeNode* root) {
+    if (root == NULL)
+        return 0;
+    
+    int leftHeight = maxDepth(root->left);
+    int rightHeight = maxDepth(root->right);
+    
+    return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
+}
 
 int main(int argc, char* argv[]) {
-
-    int num1[9] = {-1,0,0,3,3,3,0,0,0};
-    int num2[3] = {1,2,2};
+    int arr1[7] = {1, 2, 2, 3, 4, 4, 3};
+    struct TreeNode* tree1 = createTree(arr1, 0, 7);
     
-    merge(num1, 6, num2, 3);
-    
-    for (int i = 0; i < 9; ++i) {
-        printf("%d ", num1[i]);
-    }
-    
-    printf("\n");
+    printf("%d\n", maxDepth(tree1));
     
     
     return 0;
