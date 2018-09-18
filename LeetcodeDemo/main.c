@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <math.h>
 
 struct ListNode {
     int val;
@@ -79,6 +80,34 @@ void preorderTraverse(struct TreeNode* root) {
     
     preorderTraverse(root->left);
     preorderTraverse(root->right);
+}
+
+int maxDepth(struct TreeNode* root);
+void levelorderTraverse(struct TreeNode* root) {
+    if (root == NULL)
+        return ;
+    
+    int height = maxDepth(root);
+    
+    printf("Height: %d\n", height);
+    
+    struct TreeNode** queue = (struct TreeNode**)malloc(sizeof(struct TreeNode*) *
+                                                        (pow(2, height) - 1));
+//    struct TreeNode* queue[20];
+    
+    int front = 0, rear = 0;
+    
+    queue[rear++] = root;
+    
+    while (front != rear) {
+        
+    }
+    
+    
+    
+    
+    
+    
 }
 
 /*
@@ -818,7 +847,7 @@ int main(int argc, char* argv[]) {
     int arr1[7] = {1, 2, 2, 3, 4, 4, 3};
     struct TreeNode* tree1 = createTree(arr1, 0, 7);
     
-    printf("%d\n", maxDepth(tree1));
+    levelorderTraverse(tree1);
     
     
     return 0;
