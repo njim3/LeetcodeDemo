@@ -82,33 +82,125 @@ void preorderTraverse(struct TreeNode* root) {
     preorderTraverse(root->right);
 }
 
-int maxDepth(struct TreeNode* root);
-void levelorderTraverse(struct TreeNode* root) {
-    if (root == NULL)
-        return ;
+#define STACK_INIT_SIZE         1000
+#define STACK_INCREMENT         100
+
+typedef struct TreeNodeStack {
+    struct TreeNode** base;
     
-    int height = maxDepth(root);
+    int top;
+    int size;
+} TreeNodeStack;
+
+TreeNodeStack* createStack(void) {
+    TreeNodeStack* stack = (TreeNodeStack*)malloc(
+                                                  sizeof(struct TreeNodeStack));
     
-    printf("Height: %d\n", height);
+    if (!stack)
+        return NULL;
     
-    struct TreeNode** queue = (struct TreeNode**)malloc(sizeof(struct TreeNode*) *
-                                                        (pow(2, height) - 1));
-//    struct TreeNode* queue[20];
+    stack->base = (struct TreeNode**)malloc(sizeof(struct TreeNode*) *
+                                            STACK_INIT_SIZE);
     
-    int front = 0, rear = 0;
+    if (!stack->base)
+        return NULL;
     
-    queue[rear++] = root;
+    stack->top = 0;
+    stack->size = STACK_INIT_SIZE;
     
-    while (front != rear) {
-        
+    return stack;
+}
+
+bool enlargeStack(TreeNodeStack* stack) {
+    int newSize = stack->size + STACK_INCREMENT;
+    
+    stack->base = (struct TreeNode**)realloc(stack->base,
+                                             sizeof(struct TreeNode*) * newSize);
+    if (!stack->base)
+        return false;
+    
+    stack->size = newSize;
+    
+    return true;
+}
+
+void pushStack(TreeNodeStack* stack, struct TreeNode* node) {
+    if (stack->top >= stack->size) {
+        if (!enlargeStack(stack))
+            return ;
     }
     
-    
-    
-    
-    
-    
+    stack->base[stack->top++] = node;
 }
+
+struct TreeNode* popStack(TreeNodeStack* stack) {
+    if (stack->top == 0)
+        return NULL;
+    
+    return stack->base[--stack->top];
+}
+
+bool isStackEmpty(TreeNodeStack* stack) {
+    return stack->top == 0;
+}
+
+int sizeOfStack(TreeNodeStack* stack) {
+    return stack->top;
+}
+
+void destroyStack(TreeNodeStack* stack) {
+    free(stack->base);
+    free(stack);
+}
+
+typedef struct TreeStackQueue {
+    struct TreeNodeStack* stack1;
+    struct TreeNodeStack* stack2;
+} TreeStackQueue;
+
+TreeStackQueue* createQueue(void) {
+    TreeStackQueue* queue = (TreeStackQueue*)malloc(sizeof(TreeStackQueue));
+    
+    if (!queue)
+        return NULL;
+    
+    queue->stack1 = createStack();
+    queue->stack2 = createStack();
+    
+    return queue;
+}
+
+void enQueue(TreeStackQueue* queue, struct TreeNode* node) {
+    pushStack(queue->stack1, node);
+}
+
+struct TreeNode* deQueue(TreeStackQueue* queue) {
+    if (isStackEmpty(queue->stack2)) {
+        while (!isStackEmpty(queue->stack1)) {
+            struct TreeNode* node = popStack(queue->stack1);
+            
+            pushStack(queue->stack2, node);
+        }
+    }
+    
+    return popStack(queue->stack2);
+}
+
+bool isQueueEmpty(TreeStackQueue* queue) {
+    return isStackEmpty(queue->stack1) && isStackEmpty(queue->stack2);
+}
+
+int sizeOfQueue(TreeStackQueue* queue) {
+    return sizeOfStack(queue->stack1) + sizeOfStack(queue->stack2);
+}
+
+void destroyQueue(TreeStackQueue* queue) {
+    free(queue->stack1->base);
+    free(queue->stack1);
+    free(queue->stack2->base);
+    free(queue->stack2);
+}
+
 
 /*
  * 7. Reverse Integer
@@ -830,6 +922,71 @@ bool isSymmetric(struct TreeNode* root) {
 }
 
 /*
+ * 107. Binary Tree Level Order Traversal II
+ * URL: https://leetcode.com/problems/binary-tree-level-order-traversal-ii/
+ */
+int** levelOrderBottom(struct TreeNode* root, int** columnSizes, int* returnSize) {
+    if (!root) {
+        (* columnSizes) = NULL;
+        (* returnSize) = 0;
+        
+        return NULL;
+    }
+    
+    TreeStackQueue* queue = createQueue();
+    
+    TreeNodeStack* nodesValueStack = createStack();
+    TreeNodeStack* nodesCountStack = createStack();
+    
+    enQueue(queue, root);
+    int nodesCount = 1;
+    struct TreeNode* treeNode = NULL;
+    
+    while (!isQueueEmpty(queue)) {
+        nodesCount = sizeOfQueue(queue);
+        
+        pushStack(nodesCountStack, (struct TreeNode*)(intptr_t)nodesCount);
+        
+        for (int i = 0; i < nodesCount; ++i) {
+            treeNode = deQueue(queue);
+            
+            if (treeNode->left)
+                enQueue(queue, treeNode->left);
+            if (treeNode->right)
+                enQueue(queue, treeNode->right);
+            
+            pushStack(nodesValueStack, (struct TreeNode*)(intptr_t)treeNode->val);
+        }
+    }
+    
+    (* returnSize) = sizeOfStack(nodesCountStack);
+    (* columnSizes) = (int*)malloc(sizeof(int) * (* returnSize));
+    
+    int** returnArray = (int**)malloc(sizeof(int*) * (* returnSize));
+    int j = 0;
+    
+    while (!isStackEmpty(nodesCountStack)) {
+        nodesCount = (int)(intptr_t)popStack(nodesCountStack);
+        (* columnSizes)[j] = nodesCount;
+        
+        int* curValArr = (int*)malloc(sizeof(int) * nodesCount);
+        
+        for (int i = nodesCount - 1; i >=0; --i)
+            curValArr[i] = (int)(intptr_t)popStack(nodesValueStack);
+        
+        returnArray[j] = curValArr;
+        
+        ++j;
+    }
+    
+    destroyStack(nodesCountStack);
+    destroyStack(nodesValueStack);
+    destroyQueue(queue);
+    
+    return returnArray;
+}
+
+/*
  * 104. Maximum Depth of Binary Tree
  * URL: https://leetcode.com/problems/maximum-depth-of-binary-tree/
  */
@@ -844,11 +1001,43 @@ int maxDepth(struct TreeNode* root) {
 }
 
 int main(int argc, char* argv[]) {
-    int arr1[7] = {1, 2, 2, 3, 4, 4, 3};
-    struct TreeNode* tree1 = createTree(arr1, 0, 7);
+    struct TreeNode* root = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    struct TreeNode* level11 = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    struct TreeNode* level12 = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    struct TreeNode* level121 = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    struct TreeNode* level122 = (struct TreeNode*)malloc(sizeof(struct TreeNode));
     
-    levelorderTraverse(tree1);
+    root->val = 3;
+    root->left = level11;
+    root->right = level12;
     
+    level11->val = 9;
+    level11->left = NULL;
+    level11->right = NULL;
+    
+    level12->val = 20;
+    level12->left = level121;
+    level12->right = level122;
+    
+    level121->val = 15;
+    level121->left = NULL;
+    level121->right = NULL;
+    
+    level122->val = 7;
+    level122->left = NULL;
+    level122->right = NULL;
+    
+    int returnSize = 0;
+    int* columnSizes = (int*)malloc(sizeof(int));
+    int** returnArray = levelOrderBottom(root, &columnSizes, &returnSize);
+    
+    for (int i = 0; i < returnSize; ++i) {
+        for (int j = 0; j < columnSizes[i]; ++j) {
+            printf("%d ", returnArray[i][j]);
+        }
+        
+        putchar('\n');
+    }
     
     return 0;
 }

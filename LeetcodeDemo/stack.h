@@ -1,20 +1,18 @@
 //
-//  stack.h
+//  Stack.h
 //  CStackDemo
 //
-//  Created by njim3 on 2018/9/20.
+//  Created by njim3 on 2018/9/26.
 //  Copyright © 2018 njim3. All rights reserved.
 //
 
-#ifndef stack_h
-#define stack_h
+#ifndef Stack_h
+#define Stack_h
 
-#include <stdlib.h>
-#include <malloc/malloc.h>
 #include <stdbool.h>
 
-#define SIZE        1000
-#define INCREMENT   100
+#define SIZE            5
+#define INCREMENT       3
 
 typedef struct Stack {
     int* base;
@@ -23,16 +21,16 @@ typedef struct Stack {
     int size;
 } Stack;
 
-Stack* createStack(void);
-Stack* createStackWithArray(int* arr, int size);
-void destroyStack(Stack* stack);
-bool extendStack(Stack* stack);
-void pushStack(Stack* stack, int data);
-int popStack(Stack* stack);
-bool isStackEmpty(Stack* stack);
-int sizeOfStack(Stack* stack);
-int lengthOfStack(Stack* stack);
+Stack* CreateStack(void);
+Stack* CreateStackWithArray(int* arr, int size);
+void DestroyStack(Stack* stack);
+bool ExtendStack(Stack* stack);
+void PushStack(Stack* stack, int data);
+int PopStack(Stack* stack);
+bool IsStackEmpty(Stack* stack);
+int LengthOfStack(Stack* stack);
 
-void traverseStack(Stack* stack);
+void TraverseStack(Stack* stack);
 
-#endif /* stack_h */
+
+#endif /* Stack_h */

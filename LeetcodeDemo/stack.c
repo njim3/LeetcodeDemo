@@ -1,46 +1,52 @@
 //
-//  stack.c
+//  Stack.c
 //  CStackDemo
 //
-//  Created by njim3 on 2018/9/20.
+//  Created by njim3 on 2018/9/26.
 //  Copyright © 2018 njim3. All rights reserved.
 //
 
-#include "stack.h"
+#include "Stack.h"
+#include <malloc/malloc.h>
+#include <stdlib.h>
 #include <stdio.h>
 
-Stack* createStack(void) {
+Stack* CreateStack(void) {
     Stack* stack = (Stack*)malloc(sizeof(Stack));
     
     if (!stack)
         return NULL;
     
     stack->base = (int*)malloc(sizeof(int) * SIZE);
+    
+    if (!stack->base)
+        return NULL;
+    
     stack->top = 0;
     stack->size = SIZE;
     
     return stack;
 }
 
-Stack* createStackWithArray(int* arr, int size) {
+Stack* CreateStackWithArray(int* arr, int size) {
     if (size == 0)
         return NULL;
     
-    Stack* stack = createStack();
+    Stack* stack = CreateStack();
     
     for (int i = 0; i < size; ++i) {
-        pushStack(stack, arr[i]);
+        PushStack(stack, arr[i]);
     }
     
     return stack;
 }
 
-void destroyStack(Stack* stack) {
+void DestroyStack(Stack* stack) {
     free(stack->base);
     free(stack);
 }
 
-bool extendStack(Stack* stack) {
+bool ExtendStack(Stack* stack) {
     int newSize = stack->size + INCREMENT;
     int* extendedBase = (int*)realloc(stack->base, sizeof(int) * newSize);
     
@@ -48,50 +54,46 @@ bool extendStack(Stack* stack) {
         return false;
     
     stack->base = extendedBase;
+    
+    printf("Extended stack size from %d -> %d.\n", stack->size, newSize);
+    
     stack->size = newSize;
     
     return true;
 }
 
-void pushStack(Stack* stack, int data) {
+void PushStack(Stack* stack, int data) {
     if (stack->top >= stack->size) {
-        if (!extendStack(stack))
+        if (!ExtendStack(stack))
             return ;
     }
     
     stack->base[stack->top++] = data;
 }
 
-int popStack(Stack* stack) {
+int PopStack(Stack* stack) {
     if (stack->top == 0)
         return -1;
     
     return stack->base[--stack->top];
 }
 
-bool isStackEmpty(Stack* stack) {
+bool IsStackEmpty(Stack* stack) {
     return stack->top == 0;
 }
 
-int sizeOfStack(Stack* stack) {
+int LengthOfStack(Stack* stack) {
     return stack->size;
 }
 
-int lengthOfStack(Stack* stack) {
-    return stack->top;
-}
-
-void traverseStack(Stack* stack) {
+void TraverseStack(Stack* stack) {
     if (stack->top == 0 || !stack)
         return ;
     
-    printf("Traverse from Bottom to top: \n");
+    printf("Traverse from bottom to top: \n");
     for (int i = 0; i < stack->top; ++i) {
         printf("%d ", stack->base[i]);
     }
     
     printf("\n");
 }
-
-
-

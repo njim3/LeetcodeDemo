@@ -1,34 +1,34 @@
 //
-//  queue.h
+//  Queue.h
 //  CStackDemo
 //
-//  Created by njim3 on 2018/9/20.
+//  Created by njim3 on 2018/9/27.
 //  Copyright © 2018 njim3. All rights reserved.
 //
 
-#ifndef queue_h
-#define queue_h
-#include <malloc/malloc.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <stdio.h>
+#ifndef Queue_h
+#define Queue_h
 
-typedef struct QueueNode {
+#include <stdbool.h>
+
+typedef struct QNode {
     int data;
     
-    struct QueueNode* next;
-} QueueNode;
+    struct QNode* next;
+} QNode;
 
 typedef struct {
-    QueueNode* front;
-    
-    QueueNode* rear;
-} LinkQueue;
+    QNode* front, * rear;
+} Queue;
 
-void CreateQueue(LinkQueue* queue);
-bool EnQueue(LinkQueue* queue, int data);
-bool DeQueue(LinkQueue* queue, int* dataPtr);
-void Destroy(LinkQueue* queue);
-void Traverse(LinkQueue* queue);
+Queue* CreateQueue(void);
+bool EnQueue(Queue* queue, int data);
+bool DeQueue(Queue* queue, int* dataPtr);
+void Destroy(Queue* queue);
+void Traverse(Queue* queue);
 
-#endif /* queue_h */
+
+
+
+
+#endif /* Queue_h */

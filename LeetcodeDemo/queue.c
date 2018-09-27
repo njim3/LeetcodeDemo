@@ -1,27 +1,37 @@
 //
-//  queue.c
+//  Queue.c
 //  CStackDemo
 //
-//  Created by njim3 on 2018/9/20.
+//  Created by njim3 on 2018/9/27.
 //  Copyright © 2018 njim3. All rights reserved.
 //
 
-#include "queue.h"
+#include "Queue.h"
+#include <malloc/malloc.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-void CreateQueue(LinkQueue* queue) {
+Queue* CreateQueue(void) {
+    Queue* queue = (Queue*)malloc(sizeof(Queue));
+    
+    if (!queue)
+        return NULL;
+    
     queue->front = queue->rear = NULL;
+    
+    return queue;
 }
 
-bool EnQueue(LinkQueue* queue, int data) {
-    QueueNode* node = (QueueNode*)malloc(sizeof(QueueNode));
-    
-    if (!node)
+bool EnQueue(Queue* queue, int data) {
+    if (!queue)
         return false;
+    
+    QNode* node = (QNode*)malloc(sizeof(QNode));
     
     node->data = data;
     node->next = NULL;
     
-    if (queue->front == NULL) {
+    if (!queue->front) {
         queue->front = queue->rear = node;
     } else {
         queue->rear->next = node;
@@ -31,37 +41,49 @@ bool EnQueue(LinkQueue* queue, int data) {
     return true;
 }
 
-bool DeQueue(LinkQueue* queue, int* dataPtr) {
-    if (queue->front == NULL)
-        return NULL;
+bool DeQueue(Queue* queue, int* dataPtr) {
+    if (!queue || !queue->front)
+        return false;
     
-    QueueNode* p = queue->front->next, *q = queue->front;
+    QNode* p = queue->front;
     
-    queue->front = p;
-    q->next = NULL;
+    queue->front = p->next;
+    p->next = NULL;
     
-    (*dataPtr) = q->data;
+    (* dataPtr) = p->data;
+    free(p);
     
-    free(q);
+    if (!queue->front)
+        queue->rear = NULL;
     
     return true;
 }
 
-void Destroy(LinkQueue* queue) {
+void Destroy(Queue* queue) {
+    if (!queue)
+        return ;
+    
     while (queue->front) {
-        queue->rear = queue->front->next;
+        queue->rear = queue->front;
+        queue->front = queue->front->next;
         
-        free(queue->front);
-        queue->front = queue->rear;
+        free(queue->rear);
     }
+    
+    free(queue);
 }
 
-void Traverse(LinkQueue* queue) {
-    QueueNode* p = queue->front;
+void Traverse(Queue* queue) {
+    if (!queue)
+        return ;
     
-    while(p) {
+    QNode* p = queue->front;
+    
+    while (p) {
         printf("%d ", p->data);
         
         p = p->next;
     }
+    
+    putchar('\n');
 }

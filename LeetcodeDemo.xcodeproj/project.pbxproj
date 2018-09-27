@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		206E1B9F215A22F3007D7AB4 /* stack.c in Sources */ = {isa = PBXBuildFile; fileRef = 206E1B9B215A22F3007D7AB4 /* stack.c */; };
-		206E1BA0215A22F3007D7AB4 /* queue.c in Sources */ = {isa = PBXBuildFile; fileRef = 206E1B9D215A22F3007D7AB4 /* queue.c */; };
 		DB76D08F20F0D7B100186A5F /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = DB76D08E20F0D7B100186A5F /* main.c */; };
 /* End PBXBuildFile section */
 
@@ -25,10 +23,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		206E1B9B215A22F3007D7AB4 /* stack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stack.c; sourceTree = "<group>"; };
-		206E1B9C215A22F3007D7AB4 /* queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = queue.h; sourceTree = "<group>"; };
-		206E1B9D215A22F3007D7AB4 /* queue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = queue.c; sourceTree = "<group>"; };
-		206E1B9E215A22F3007D7AB4 /* stack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stack.h; sourceTree = "<group>"; };
 		DB76D08B20F0D7B100186A5F /* LeetcodeDemo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LeetcodeDemo; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB76D08E20F0D7B100186A5F /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -63,10 +57,6 @@
 		DB76D08D20F0D7B100186A5F /* LeetcodeDemo */ = {
 			isa = PBXGroup;
 			children = (
-				206E1B9D215A22F3007D7AB4 /* queue.c */,
-				206E1B9C215A22F3007D7AB4 /* queue.h */,
-				206E1B9B215A22F3007D7AB4 /* stack.c */,
-				206E1B9E215A22F3007D7AB4 /* stack.h */,
 				DB76D08E20F0D7B100186A5F /* main.c */,
 			);
 			path = LeetcodeDemo;
@@ -127,8 +117,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				206E1BA0215A22F3007D7AB4 /* queue.c in Sources */,
-				206E1B9F215A22F3007D7AB4 /* stack.c in Sources */,
 				DB76D08F20F0D7B100186A5F /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
