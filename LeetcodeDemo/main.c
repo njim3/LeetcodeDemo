@@ -1000,44 +1000,50 @@ int maxDepth(struct TreeNode* root) {
     return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
 }
 
-int main(int argc, char* argv[]) {
-    struct TreeNode* root = (struct TreeNode*)malloc(sizeof(struct TreeNode));
-    struct TreeNode* level11 = (struct TreeNode*)malloc(sizeof(struct TreeNode));
-    struct TreeNode* level12 = (struct TreeNode*)malloc(sizeof(struct TreeNode));
-    struct TreeNode* level121 = (struct TreeNode*)malloc(sizeof(struct TreeNode));
-    struct TreeNode* level122 = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+
+/*
+ * 108. Convert Sorted Array to Binary Search Tree
+ * URL: https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/
+ */
+struct TreeNode* sortedArrayToBST(int* nums, int numsSize) {
+    if (numsSize == 0)
+        return NULL;
     
-    root->val = 3;
-    root->left = level11;
-    root->right = level12;
-    
-    level11->val = 9;
-    level11->left = NULL;
-    level11->right = NULL;
-    
-    level12->val = 20;
-    level12->left = level121;
-    level12->right = level122;
-    
-    level121->val = 15;
-    level121->left = NULL;
-    level121->right = NULL;
-    
-    level122->val = 7;
-    level122->left = NULL;
-    level122->right = NULL;
-    
-    int returnSize = 0;
-    int* columnSizes = (int*)malloc(sizeof(int));
-    int** returnArray = levelOrderBottom(root, &columnSizes, &returnSize);
-    
-    for (int i = 0; i < returnSize; ++i) {
-        for (int j = 0; j < columnSizes[i]; ++j) {
-            printf("%d ", returnArray[i][j]);
-        }
+    if (numsSize == 1) {
+        struct TreeNode* node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
         
-        putchar('\n');
+        node->val = nums[0];
+        node->left = NULL;
+        node->right = NULL;
+        
+        return node;
     }
+    
+    int low = 0, high = numsSize;
+    
+    int mid = (low + high) / 2;
+    struct TreeNode* root;
+    
+    if (low < high) {
+        root = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+        
+        root->val = nums[mid];
+        root->left = sortedArrayToBST(nums, mid);
+        root->right = sortedArrayToBST(nums + mid + 1, numsSize - mid - 1);
+    } else
+        root = NULL;
+    
+    return root;
+}
+
+int main(int argc, char* argv[]) {
+    int arr[5] = {-10,-3,0,5,9};
+    
+    struct TreeNode* root = sortedArrayToBST(arr, 5);
+    
+    preorderTraverse(root);
+    
+    
     
     return 0;
 }
