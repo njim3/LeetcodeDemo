@@ -1036,6 +1036,18 @@ struct TreeNode* sortedArrayToBST(int* nums, int numsSize) {
     return root;
 }
 
+/*
+ * 110. Balanced Binary Tree
+ * URL: https://leetcode.com/problems/balanced-binary-tree/
+ */
+bool isBalanced(struct TreeNode* root) {
+    if (root == NULL)
+        return true;
+    
+    return abs(maxDepth(root->left) - maxDepth(root->right)) > 1 ? false :
+    (isBalanced(root->left) && isBalanced(root->right));
+}
+
 int main(int argc, char* argv[]) {
     int arr[5] = {-10,-3,0,5,9};
     
