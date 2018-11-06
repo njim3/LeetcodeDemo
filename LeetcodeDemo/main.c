@@ -1048,14 +1048,101 @@ bool isBalanced(struct TreeNode* root) {
     (isBalanced(root->left) && isBalanced(root->right));
 }
 
+/*
+ * 111. Minimum Depth of Binary Tree
+ * URL: https://leetcode.com/problems/minimum-depth-of-binary-tree/
+ */
+int minDepth(struct TreeNode* root) {
+    if (root == NULL)
+        return 0;
+    
+    int leftHeight = minDepth(root->left);
+    int rightHeight = minDepth(root->right);
+    
+    if (leftHeight == 0)
+        return rightHeight + 1;
+    if (rightHeight == 0)
+        return leftHeight + 1;
+    
+    return leftHeight > rightHeight ? rightHeight + 1 : leftHeight + 1;
+}
+
+/*
+ * 112. Path Sum
+ * URL: https://leetcode.com/problems/path-sum/
+ */
+bool hasPathSum(struct TreeNode* root, int sum) {
+    if (root == NULL)
+        return false;
+    
+    if (root->left == NULL && root->right == NULL && root->val == sum)
+        return true;
+    
+    return hasPathSum(root->left, sum - root->val) ||
+            hasPathSum(root->right, sum - root->val);
+}
+
+/*
+ * 118. Pascal's Triangle
+ * URL: https://leetcode.com/problems/pascals-triangle/
+ */
+int** generate(int numRows, int** columnSizes) {
+    if (numRows == 0) {
+        (*columnSizes) = NULL;
+        
+        return NULL;
+    }
+    
+    *columnSizes = (int*)malloc(sizeof(int) * numRows);
+    int** returnArr = (int**)malloc(sizeof(int*) * numRows);
+    
+    for (int i = 0; i < numRows; ++i) {
+        int curRowLen = i + 1;
+        (*columnSizes)[i] = curRowLen;
+        
+        (*(returnArr + i)) = (int*)malloc(sizeof(int) * curRowLen);
+        
+        if (i == 0) {
+            (*(returnArr + i))[0] = 1;
+        } else {
+            (*(returnArr + i))[0] = (*(returnArr + i))[curRowLen - 1] = 1;
+            
+            for (int j = 1; j < (curRowLen / 2 + curRowLen % 2); ++j) {
+                (*(returnArr + i))[j] = (*(returnArr + i - 1))[j] +
+                        (*(returnArr + i - 1))[j - 1];
+                
+                (*(returnArr + i))[curRowLen - 1 - j] = (*(returnArr + i))[j];
+            }
+        }
+    }
+    
+    return returnArr;
+}
+
+
 int main(int argc, char* argv[]) {
-    int arr[5] = {-10,-3,0,5,9};
+    int** returnArr = NULL, *columnSizes = NULL;
+    int numRows = 10;
     
-    struct TreeNode* root = sortedArrayToBST(arr, 5);
+    returnArr = generate(numRows, &columnSizes);
     
-    preorderTraverse(root);
+    for (int i = 0; i < numRows; ++i) {
+        int curRowLen = columnSizes[i];
+        printf("%d\t", curRowLen);
+        
+        for (int j = 0; j < curRowLen; ++j) {
+            printf("%d ", (*(returnArr + i))[j]);
+        }
+        
+        putchar('\n');
+    }
     
+    for (int i = 0; i < numRows; ++i) {
+        free(returnArr[i]);
+    }
     
+    free(columnSizes);
+    free(returnArr);
     
     return 0;
 }
