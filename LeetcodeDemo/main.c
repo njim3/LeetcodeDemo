@@ -1119,30 +1119,50 @@ int** generate(int numRows, int** columnSizes) {
     return returnArr;
 }
 
+/*
+ * 119. Pascal's Triangle II
+ * URL: https://leetcode.com/problems/pascals-triangle-ii/
+ */
+long getCombination(int n, int m) {
+    long res = 1;
+    
+    for (int i = 1; i <= m; ++i) {
+        res = (res * (n - m + i)) / i;
+    }
+    
+    return res;
+}
+
+int* getRow(int rowIndex, int* returnSize) {
+    (* returnSize) = rowIndex + 1;
+    int* returnArr = (int*)malloc((*returnSize) * sizeof(int));
+    
+    returnArr[0] = returnArr[(*returnSize) - 1] = 1;
+    
+    if (rowIndex == 0) {
+        returnArr[0] = 1;
+        
+        return returnArr;
+    }
+    
+    for (int i = 1; i < ((*returnSize) / 2 + 1); ++i) {
+        returnArr[i] = returnArr[(*returnSize) - i - 1] =
+        (int)getCombination(rowIndex, i);
+    }
+    
+    return returnArr;
+}
+
 
 int main(int argc, char* argv[]) {
-    int** returnArr = NULL, *columnSizes = NULL;
-    int numRows = 10;
+    int returnSize = 0;
+    int* returnArr = getRow(30, &returnSize);
     
-    returnArr = generate(numRows, &columnSizes);
-    
-    for (int i = 0; i < numRows; ++i) {
-        int curRowLen = columnSizes[i];
-        printf("%d\t", curRowLen);
-        
-        for (int j = 0; j < curRowLen; ++j) {
-            printf("%d ", (*(returnArr + i))[j]);
-        }
-        
-        putchar('\n');
+    for (int i = 0; i < returnSize; ++i) {
+        printf("%d ", returnArr[i]);
     }
     
-    for (int i = 0; i < numRows; ++i) {
-        free(returnArr[i]);
-    }
-    
-    free(columnSizes);
-    free(returnArr);
+    putchar('\n');
     
     return 0;
 }
