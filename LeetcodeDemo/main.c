@@ -1133,6 +1133,10 @@ long getCombination(int n, int m) {
     return res;
 }
 
+/*
+ * 120. Pascal's Triangle II
+ * URL: https://leetcode.com/problems/pascals-triangle-ii/
+ */
 int* getRow(int rowIndex, int* returnSize) {
     (* returnSize) = rowIndex + 1;
     int* returnArr = (int*)malloc((*returnSize) * sizeof(int));
@@ -1153,16 +1157,32 @@ int* getRow(int rowIndex, int* returnSize) {
     return returnArr;
 }
 
-
-int main(int argc, char* argv[]) {
-    int returnSize = 0;
-    int* returnArr = getRow(30, &returnSize);
+/*
+ * 121. Best Time to Buy and Sell Stock
+ * URL: https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+ */
+int maxProfit(int* prices, int pricesSize) {
+    if (prices == NULL || pricesSize < 2)
+        return 0;
     
-    for (int i = 0; i < returnSize; ++i) {
-        printf("%d ", returnArr[i]);
+    int maxProfit = prices[1] - prices[0];
+    
+    for (int i = 0; i < (pricesSize - 1); ++i) {
+        for (int j = i; j < pricesSize; ++j) {
+            int currentProfit = prices[j] - prices[i];
+            
+            if (currentProfit > maxProfit)
+                maxProfit = currentProfit;
+        }
     }
     
-    putchar('\n');
+    return maxProfit < 0 ? 0 : maxProfit;
+}
+
+int main(int argc, char* argv[]) {
+    int arr[5] = {7,6,4,3,1};
+    
+    printf("Max Profit: %d\n", maxProfit(arr, 5));
     
     return 0;
 }
