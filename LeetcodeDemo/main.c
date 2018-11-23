@@ -1179,10 +1179,183 @@ int maxProfit(int* prices, int pricesSize) {
     return maxProfit < 0 ? 0 : maxProfit;
 }
 
-int main(int argc, char* argv[]) {
-    int arr[5] = {7,6,4,3,1};
+/*
+ * 125. Valid Palindrome
+ * URL: https://leetcode.com/problems/valid-palindrome/
+ */
+bool isAlphanumeric(char ch);
+bool judgeTwoChIsEqual(char ch1, char ch2);
+
+bool isPalindrome2(char* s) {
+    if (!s)
+        return false;
     
-    printf("Max Profit: %d\n", maxProfit(arr, 5));
+    if (strlen(s) == 0)
+        return true;
+    
+    
+    int len = (int)strlen(s);
+    int i = 0, j = len - 1;
+    
+    while (i < j) {
+        if (!isAlphanumeric(s[i])) {
+            ++i;
+            continue;
+        }
+        
+        if (!isAlphanumeric(s[j])) {
+            --j;
+            continue;
+        }
+        
+        if (!judgeTwoChIsEqual(s[i], s[j])) {
+            return false;
+        }
+        
+        ++i;
+        --j;
+    }
+    
+    return true;
+}
+
+bool isAlpha(char ch) {
+    if ((ch >= 'a' && ch <= 'z') ||
+        (ch >= 'A' && ch <= 'Z'))
+        return true;
+    
+    return false;
+}
+
+bool isAlphanumeric(char ch) {
+    if ((ch >= 'a' && ch <= 'z') ||
+        (ch >= 'A' && ch <= 'Z') ||
+        (ch >= '0' && ch <= '9'))
+        return true;
+    
+    return false;
+}
+
+bool judgeTwoChIsEqual(char ch1, char ch2) {
+    if (ch1 == ch2)
+        return true;
+    
+    if (isAlpha(ch1) && isAlpha(ch2)) {
+        if (ch1 - ch2 == 32 || ch2 - ch1 == 32)
+            return true;
+    }
+    
+    return false;
+}
+
+/*
+ * 136. Single Number
+ * URL: https://leetcode.com/problems/single-number/
+ */
+int singleNumber(int* nums, int numsSize) {
+    if (numsSize == 1) {
+        return nums[0];
+    }
+    
+    int count = 0;
+    
+    for (int i = 0; i < numsSize; ++i) {
+        count = 0;
+        
+        for (int j = 0; j < numsSize; ++j) {
+            if (nums[i] == nums[j])
+                ++count;
+        }
+        
+        if (count == 1)
+            return nums[i];
+    }
+    
+    return 0;
+}
+
+/*
+ * 141. Linked List Cycle
+ * URL: https://leetcode.com/problems/linked-list-cycle/
+ */
+bool hasCycle(struct ListNode *head) {
+    if (!head)
+        return false;
+    
+    struct ListNode* slow = head, * fast = head->next;
+    
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        
+        if (slow == fast)
+            return true;
+    }
+    
+    return false;
+}
+
+/*
+ * 160. Intersection of Two Linked Lists
+ * URL: https://leetcode.com/problems/intersection-of-two-linked-lists/
+ */
+int getListLength(struct ListNode* head);
+struct ListNode *getIntersectionNode(struct ListNode *headA,
+                                     struct ListNode *headB) {
+    if (!headA || !headB)
+        return NULL;
+    
+    int listALength = getListLength(headA);
+    int listBLength = getListLength(headB);
+    int diff = listALength - listBLength;
+    
+    // 先把长的链表走完
+    for (int i = 0; i < abs(diff); ++i) {
+        if (diff > 0)
+            headA = headA->next;
+        else
+            headB = headB->next;
+    }
+    
+    // 找相同
+    while (headA && headB && headA != headB) {
+        headA = headA->next;
+        headB = headB->next;
+    }
+    
+    return (headA && headB) ? headA : NULL;
+}
+
+int getListLength(struct ListNode* head) {
+    int length = 0;
+    
+    while (head) {
+        ++length;
+        
+        head = head->next;
+    }
+    
+    return length;
+}
+
+struct ListNode *getIntersectionNode2(struct ListNode *headA,
+                                      struct ListNode *headB) {
+    if (!headA || !headB)
+        return NULL;
+    
+    struct ListNode* aNode = headA, * bNode = headB;
+    
+    while (aNode != bNode) {
+        aNode = aNode ? aNode->next : headB;
+        bNode = bNode ? bNode->next : headA;
+    }
+    
+    return aNode;
+}
+
+
+int main(int argc, char* argv[]) {
+    
     
     return 0;
 }
