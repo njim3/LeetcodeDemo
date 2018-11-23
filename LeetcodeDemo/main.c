@@ -1353,8 +1353,76 @@ struct ListNode *getIntersectionNode2(struct ListNode *headA,
     return aNode;
 }
 
+/*
+ * 167. Two Sum II - Input array is sorted
+ * URL: https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/
+ */
+int* twoSum(int* numbers, int numbersSize, int target, int* returnSize) {
+    if (numbers == NULL || numbersSize == 1) {
+        (* returnSize) = 0;
+        
+        return NULL;
+    }
+    
+    int left = 0, right = numbersSize - 1;
+    
+    int* returnArr = (int*)malloc(sizeof(int) * 2);
+    (* returnSize) = 2;
+    
+    while (left < right) {
+        if ((numbers[left] + numbers[right]) == target) {
+            returnArr[0] = left + 1;
+            returnArr[1] = right + 1;
+            
+            return returnArr;
+        } else if ((numbers[left] + numbers[right]) > target) {
+            --right;
+        } else
+            ++left;
+    }
+    
+    return NULL;
+}
+
+/*
+ * 168. Excel Sheet Column Title
+ * URL: https://leetcode.com/problems/excel-sheet-column-title/
+ */
+char *convertToTitle(int n) {
+    char* str1 = (char*)malloc(sizeof(char) * 255);
+    char* str2 = (char*)malloc(sizeof(char) * 255);
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsizeof-array-argument"
+#pragma clang diagnostic ignored "-Wsizeof-pointer-memaccess"
+    memset(str1, '\0', sizeof(str1));
+    memset(str2, '\0', sizeof(str2));
+#pragma clang diagnostic pop
+    
+    int count = 0;
+    
+    while (n > 0) {
+        n = n - 1;
+        
+        *(str1 + count) = (n % 26) + 'A';
+        ++count;
+        
+        n = n / 26;
+    }
+    
+    for (int i = 0; i < strlen(str1); ++i) {
+        *(str2 + i) = *(str1 + strlen(str1) - i - 1);
+    }
+    
+    free(str1);
+    
+    return str2;
+}
+
 
 int main(int argc, char* argv[]) {
+    
+    printf("%s\n", convertToTitle(676));
     
     
     return 0;
