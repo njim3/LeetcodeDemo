@@ -1419,10 +1419,95 @@ char *convertToTitle(int n) {
     return str2;
 }
 
+/*
+ * 169. Majority Element
+ * https://leetcode.com/problems/majority-element/
+ */
+int majorityElement(int* nums, int numsSize) {
+    int* elementArr = (int*)malloc(sizeof(int) * numsSize);
+    int* elementCountArr = (int*)malloc(sizeof(int) * numsSize);
+    
+    elementArr[0] = nums[0];
+    elementCountArr[0] = 1;
+    int count = 1;
+    
+    for (int i = 1; i < numsSize; ++i) {
+        int j = 0;
+        
+        for (j = 0; j < count; ++j) {
+            if (nums[i] == elementArr[j]) {
+                elementCountArr[j] = elementCountArr[j] + 1;
+                
+                break;
+            }
+        }
+        
+        if (j == count) {
+            elementArr[count] = nums[i];
+            elementCountArr[count] = 1;
+            
+            ++count;
+        }
+    }
+    
+    int maxElementCount = 0, index = -1;
+    for (int i = 0; i < count; ++i) {
+        if (elementCountArr[i] > maxElementCount) {
+            maxElementCount = elementCountArr[i];
+            index = i;
+        }
+    }
+    
+    int maxCountElement = elementArr[index];
+    
+    free(elementArr);
+    free(elementCountArr);
+    
+    return maxCountElement;
+}
+
+/*
+ * 171. Excel Sheet Column Number
+ * https://leetcode.com/problems/excel-sheet-column-number/
+ */
+int titleToNumber(char* s) {
+    if (strlen(s) == 0)
+        return 0;
+    
+    int result = 0;
+    int len = (int)strlen(s);
+    
+    int j = 0;
+    for (int i = len - 1; i >= 0; --i) {
+        result += ((s[i] - 'A' + 1) * pow(26, j));
+        
+        ++j;
+    }
+    
+    return result;
+}
+
+/*
+ * 172. Factorial Trailing Zeroes
+ * https://leetcode.com/problems/factorial-trailing-zeroes/
+ */
+int trailingZeroes(int n) {
+    int fiveCount = 0;
+    
+    while (n != 0) {
+        int tmpFiveCount = n / 5;
+        
+        fiveCount += tmpFiveCount;
+        n = tmpFiveCount;
+    }
+    
+    return fiveCount;
+}
+
 
 int main(int argc, char* argv[]) {
     
-    printf("%s\n", convertToTitle(676));
+    printf("%i\n", trailingZeroes(30));
     
     
     return 0;
