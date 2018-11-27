@@ -1504,10 +1504,90 @@ int trailingZeroes(int n) {
     return fiveCount;
 }
 
+/*
+ * 189. Rotate Array
+ * https://leetcode.com/problems/rotate-array/
+ */
+void rotate(int* nums, int numsSize, int k) {
+    if (nums == NULL || numsSize == 0 || k == 0 || (k % numsSize == 0))
+        return ;
+    
+    k = k % numsSize;
+    
+    int firstNum = 0;
+    
+    for (int i = 0; i < k; ++i) {
+        firstNum = nums[numsSize - 1];
+        
+        for (int j = numsSize - 2; j >= 0; --j) {
+            nums[j + 1] = nums[j];
+        }
+        
+        nums[0] = firstNum;
+    }
+}
+
+void rotate2(int* nums, int numsSize, int k) {
+    if (nums == NULL || numsSize == 0 || k == 0 || (k % numsSize == 0))
+        return ;
+    
+    k = k % numsSize;
+    
+    int* newNums = (int*)malloc(sizeof(int) * numsSize);
+    
+    // store all nums to newNums array
+    for (int i = 0; i < numsSize; ++i) {
+        newNums[i] = nums[i];
+    }
+    
+    // get new position and store back
+    for (int i = 0; i < numsSize; ++i) {
+        nums[(i + k) % numsSize] = newNums[i];
+    }
+    
+    free(newNums);
+}
+
+void reverseRotate(int* front, int* rear);
+void rotate3(int* nums, int numsSize, int k) {
+    if (nums == NULL || numsSize == 0 || k == 0 || (k % numsSize == 0))
+        return ;
+    
+    k = k % numsSize;
+    
+    reverseRotate(&nums[0], &nums[numsSize - k - 1]);
+    reverseRotate(&nums[numsSize - k], &nums[numsSize - 1]);
+    reverseRotate(&nums[0], &nums[numsSize - 1]);
+}
+
+void reverseRotate(int* front, int* rear) {
+    if (front == NULL || rear == NULL)
+        return ;
+    
+    while (front < rear) {
+        int tempInt = (*front);
+        
+        (*front) = (*rear);
+        (*rear) = tempInt;
+        
+        ++front;
+        --rear;
+    }
+}
+
 
 int main(int argc, char* argv[]) {
     
-    printf("%i\n", trailingZeroes(30));
+    int arr[6] = {1, 2, 3, 4, 5, 6};
+    int k = 2;
+    
+    rotate3(arr, 6, k);
+    
+    for (int i = 0; i < 6; ++i) {
+        printf("%d ", arr[i]);
+    }
+    
+    putchar('\n');
     
     
     return 0;
