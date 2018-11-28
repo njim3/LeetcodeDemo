@@ -1575,20 +1575,84 @@ void reverseRotate(int* front, int* rear) {
     }
 }
 
+/*
+ * 190. Reverse Bits
+ * URL: https://leetcode.com/problems/reverse-bits/
+ */
+uint32_t reverseBits(uint32_t n) {
+    int* binaryArr = (int*)malloc(sizeof(int) * 32);
+    
+    int binaryLen = 32;
+    
+    do {
+        --binaryLen;
+        binaryArr[binaryLen] = n % 2;
+        
+        n /= 2;
+        
+    } while (n != 0);
+    
+    // 前端置0
+    for (int i = 0; i < binaryLen; ++i) {
+        binaryArr[i] = 0;
+    }
+    
+    // reverse
+    int left = 0, right = 31;
+    int tempInt = 0;
+    
+    while (left < right) {
+        tempInt = binaryArr[left];
+        binaryArr[left] = binaryArr[right];
+        binaryArr[right] = tempInt;
+        
+        ++left;
+        --right;
+    }
+    
+    // 计算结果
+    uint32_t result = 0;
+    
+    for (int i = 31; i >= 0; --i) {
+        result += (binaryArr[i] * pow(2, 31 - i));
+    }
+    
+    free(binaryArr);
+    
+    return result;
+}
+
+/*
+ * 191. Number of 1 Bits
+ * https://leetcode.com/problems/number-of-1-bits/
+ */
+int hammingWeight(uint32_t n) {
+    int* binaryArr = (int*)malloc(sizeof(int) * 32);
+    
+    int binaryLen = 32;
+    do {
+        --binaryLen;
+        binaryArr[binaryLen] = n % 2;
+        
+        n /= 2;
+        
+    } while (n != 0);
+    
+    // calculate 1
+    int count = 0;
+    for (int i = 31; i >= binaryLen; --i) {
+        if (binaryArr[i] == 1)
+            ++count;
+    }
+    
+    free(binaryArr);
+    
+    return count;
+}
 
 int main(int argc, char* argv[]) {
     
-    int arr[6] = {1, 2, 3, 4, 5, 6};
-    int k = 2;
-    
-    rotate3(arr, 6, k);
-    
-    for (int i = 0; i < 6; ++i) {
-        printf("%d ", arr[i]);
-    }
-    
-    putchar('\n');
-    
+    printf("%u\n", hammingWeight(128));
     
     return 0;
 }
