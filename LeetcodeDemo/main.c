@@ -1650,6 +1650,60 @@ int hammingWeight(uint32_t n) {
     return count;
 }
 
+/*
+ * 198. House Robber
+ * URL: https://leetcode.com/problems/house-robber/
+ */
+int max(int val1, int val2);
+int rob(int* nums, int numsSize) {
+    if (nums == NULL || numsSize == 0)
+        return 0;
+    
+    if (numsSize == 1) {
+        return nums[0];
+    }
+    
+    int* maxValueArr = (int*)malloc(sizeof(int) * numsSize);
+    
+    maxValueArr[0] = nums[0];
+    maxValueArr[1] = max(nums[0], nums[1]);
+    
+    for (int i = 2; i < numsSize; ++i) {
+        maxValueArr[i] = max(maxValueArr[i - 2] + nums[i], maxValueArr[i - 1]);
+    }
+    
+    int maxValue = maxValueArr[numsSize - 1];
+    free(maxValueArr);
+    
+    return maxValue;
+}
+
+int max(int val1, int val2) {
+    return val1 > val2 ? val1 : val2;
+}
+
+/*
+ * 202. Happy Number
+ * URL: https://leetcode.com/problems/happy-number/
+ */
+bool isHappy(int n) {
+    int sum = 0;
+    
+    while (n > 0) {
+        sum += pow(n % 10, 2);
+        
+        n /= 10;
+    }
+    
+    if (sum >= 10)
+        return isHappy(sum);
+    
+    if (sum == 1 || sum == 7)
+        return true;
+    
+    return false;
+}
+
 int main(int argc, char* argv[]) {
     
     printf("%u\n", hammingWeight(128));
