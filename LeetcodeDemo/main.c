@@ -1704,9 +1704,99 @@ bool isHappy(int n) {
     return false;
 }
 
+bool isHappy2(int n) {
+    int sum = 0;
+    
+    while (n > 0) {
+        sum += pow(n % 10, 2);
+        
+        n /= 10;
+    }
+    
+    if (sum == 4)
+        return false;
+    
+    if (sum != 1)
+        return isHappy2(sum);
+    
+    return true;
+}
+
+/*
+ * 203. Remove Linked List Elements
+ * URL: https://leetcode.com/problems/remove-linked-list-elements/
+ */
+struct ListNode* removeElements(struct ListNode* head, int val) {
+    struct ListNode* prior = NULL, * current = head;
+    
+    while (current) {
+        if (current->val == val) {
+            if (prior == NULL) {        // head node
+                head = current->next;
+                current->next = NULL;
+                
+                free(current);
+                
+                current = head;
+                prior = NULL;
+                
+            } else {
+                if (current != NULL) {      // center node
+                    prior->next = current->next;
+                    current->next = NULL;
+                    
+                    free(current);
+                    
+                    current = prior->next;
+                }
+            }
+            
+        } else {
+            prior = current;
+            current = current->next;
+        }
+    }
+
+    return head;
+}
+
+/*
+ * 204. Count Primes
+ * URL: https://leetcode.com/problems/count-primes/
+ */
+int countPrimes(int n) {
+    if (n == 0 || n == 1)
+        return 0;
+    
+    int count = 0;
+    
+    for (int val = 2; val < n; ++val) {
+        int i = 0, j = sqrt(val);
+        
+        for (i = 2; i <= j; ++i) {
+            if (val % i == 0)
+                break;
+        }
+        
+        if (i > j)
+            ++count;
+    }
+    
+    return count;
+}
+
+/*
+ * 205. Isomorphic Strings
+ * URL: https://leetcode.com/problems/isomorphic-strings/
+ */
+bool isIsomorphic(char* s, char* t) {
+    
+}
+
+
 int main(int argc, char* argv[]) {
     
-    printf("%u\n", hammingWeight(128));
+    printf("%d\n", isIsomorphic("ab", "ca"));
     
     return 0;
 }
