@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
+#include <limits.h>
 
 struct ListNode {
     int val;
@@ -1817,10 +1818,83 @@ bool isIsomorphic(char* s, char* t) {
     return true;
 }
 
+/*
+ * 206. Reverse Linked List
+ * URL: https://leetcode.com/problems/reverse-linked-list/
+ */
+struct ListNode* reverseList(struct ListNode* head) {
+    if (head == NULL)
+        return NULL;
+    
+    if (head->next == NULL)
+        return head;
+    
+    struct ListNode* current = head;
+    head = head->next;
+    struct ListNode* next = head->next;
+    
+    current->next = NULL;
+    
+    while (next) {
+        head->next = current;
+        current = head;
+        head = next;
+        
+        next = next->next;
+    }
+    
+    head->next = current;
+    
+    return head;
+}
+
+/*
+ * 217. Contains Duplicate
+ * URL: https://leetcode.com/problems/contains-duplicate/
+ */
+bool containsDuplicate(int* nums, int numsSize) {
+    if (nums == NULL || numsSize == 0)
+        return false;
+    
+    int* noDuplicateArr = (int*)malloc(sizeof(int) * numsSize);
+    int* countArr = (int*)malloc(sizeof(int) * numsSize);
+    
+    // initialize
+    for (int i = 0; i < numsSize; ++i) {
+        noDuplicateArr[i] = INT_MIN;
+        countArr[i] = 0;
+    }
+    
+    for (int i = 0; i < numsSize; ++i) {
+        int j = 0;
+        
+        for (j = 0; j <= i; ++j) {
+            if (noDuplicateArr[j] == nums[i]) {
+                if (countArr[j] == 1) {
+                    free(noDuplicateArr);
+                    free(countArr);
+                    
+                    return true;
+                }
+            }
+        }
+        
+        if (j > i) {
+            noDuplicateArr[i] = nums[i];
+            countArr[i] = 1;
+        }
+    }
+    
+    free(noDuplicateArr);
+    free(countArr);
+    
+    return false;
+}
 
 int main(int argc, char* argv[]) {
+    int arr[4] = {1,2,3,1};
     
-    
+    printf("%d\n", containsDuplicate(arr, 4));
     
     return 0;
 }
