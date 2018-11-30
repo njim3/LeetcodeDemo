@@ -1790,13 +1790,37 @@ int countPrimes(int n) {
  * URL: https://leetcode.com/problems/isomorphic-strings/
  */
 bool isIsomorphic(char* s, char* t) {
+    int* hashArr = (int*)malloc(sizeof(int) * 255);
     
+    // initialize
+    for (int i = 0; i < 255; ++i)
+        hashArr[i] = 0;
+    
+    for (int i = 0; s[i] != '\0'; ++i) {        // Don't use strlen(s)
+        int index = s[i];
+        
+        if (hashArr[index] == 0) {
+            for (int j = 0; j < 255; ++j) {
+                if (hashArr[j] == t[i])
+                    return false;
+            }
+            
+            hashArr[index] = t[i];
+        } else {
+            if (hashArr[index] != t[i])
+                return false;
+        }
+    }
+    
+    free(hashArr);
+    
+    return true;
 }
 
 
 int main(int argc, char* argv[]) {
     
-    printf("%d\n", isIsomorphic("ab", "ca"));
+    
     
     return 0;
 }
