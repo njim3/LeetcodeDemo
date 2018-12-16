@@ -1891,6 +1891,28 @@ bool containsDuplicate(int* nums, int numsSize) {
     return false;
 }
 
+/*
+ * 219. Contains Duplicate II
+ * URL: https://leetcode.com/problems/contains-duplicate-ii/
+ */
+bool containsNearbyDuplicate(int* nums, int numsSize, int k) {
+    if (nums == NULL || numsSize == 0)
+        return false;
+    
+    for (int i = 0; i < numsSize - 1; ++i) {
+        for (int j = i + 1; j < numsSize; ++j) {
+            if (nums[i] == nums[j]) {
+                if (j - i <= k)
+                    return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+
+
 int main(int argc, char* argv[]) {
     int arr[4] = {1,2,3,1};
     
