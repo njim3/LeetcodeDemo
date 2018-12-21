@@ -1954,6 +1954,53 @@ bool isPowerOfTwo(int n) {
     return true;
 }
 
+
+/*
+ * 234. Palindrome Linked List
+ * URL: https://leetcode.com/problems/palindrome-linked-list/
+ */
+bool isListPalindrome(struct ListNode* head) {
+    if (!head || !(head->next))
+        return true;
+    
+    // use fast & slow pointer to find middle of list
+    struct ListNode* fastP = head, * slowP = head;
+    
+    while (fastP->next && fastP->next->next) {
+        fastP = fastP->next->next;
+        slowP = slowP->next;
+    }
+    
+    struct ListNode* secHalfHead = slowP->next;
+    slowP->next = NULL;
+    
+    // reverse second half list
+    struct ListNode* p1 = secHalfHead, * p2 = secHalfHead->next;
+    
+    while (p1 && p2) {
+        struct ListNode* tmpNode = p2->next;
+        
+        p2->next = p1;
+        p1 = p2;
+        p2 = tmpNode;
+    }
+    
+    secHalfHead->next = NULL;
+    
+    struct ListNode* p = p2 ? p2 : p1;
+    struct ListNode* q = head;
+    
+    while (p) {
+        if (p->val != q->val)
+            return false;
+        
+        p = p->next;
+        q = q->next;
+    }
+    
+    return true;
+}
+
 int main(int argc, char* argv[]) {
     int arr[4] = {1,2,3,1};
     
