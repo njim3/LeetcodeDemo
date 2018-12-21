@@ -1912,6 +1912,47 @@ bool containsNearbyDuplicate(int* nums, int numsSize, int k) {
 }
 
 
+/*
+ * 226. Invert Binary Tree
+ * URL: https://leetcode.com/problems/invert-binary-tree/
+ */
+struct TreeNode* invertTree(struct TreeNode* root) {
+    if (!root)
+        return NULL;
+    
+    struct TreeNode* tmpNode = root->left;
+    root->left = root->right;
+    root->right = tmpNode;
+    
+    invertTree(root->left);
+    invertTree(root->right);
+    
+    return root;
+}
+
+
+/*
+ * 231. Power of Two
+ * URL: https://leetcode.com/problems/power-of-two/
+ */
+bool isPowerOfTwo(int n) {
+    if (n == 0)
+        return false;
+    
+    if (n == 1)
+        return true;
+    
+    while (n != 1) {
+        int remainder = n % 2;
+        
+        if (remainder != 0)
+            return false;
+        
+        n /= 2;
+    }
+    
+    return true;
+}
 
 int main(int argc, char* argv[]) {
     int arr[4] = {1,2,3,1};
