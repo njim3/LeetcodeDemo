@@ -2001,6 +2001,70 @@ bool isListPalindrome(struct ListNode* head) {
     return true;
 }
 
+/*
+ * 235. Lowest Common Ancestor of a Binary Search Tree
+ * URL: https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
+ */
+struct TreeNode* lowestCommonAncestor(struct TreeNode* root,
+                                      struct TreeNode* p, struct TreeNode* q) {
+    if (root == NULL)
+        return NULL;
+    
+    int minNum = p->val > q->val ? q->val : p->val;
+    int maxNum = p->val > q->val ? p->val : q->val;
+    
+    if (minNum > root->val) {
+        return lowestCommonAncestor(root->right, p, q);
+    } else if (maxNum < root->val) {
+        return lowestCommonAncestor(root->left, p, q);
+    }
+    
+    return root;
+}
+
+/*
+ * 237. Delete Node in a Linked List
+ * URL: https://leetcode.com/problems/delete-node-in-a-linked-list/
+ */
+void deleteNode(struct ListNode* node) {
+    if (!node || !(node->next))
+        return ;
+    
+    struct ListNode* nextP = node->next;
+    
+    node->val = nextP->val;
+    node->next = nextP->next;
+    nextP->next = NULL;
+    
+    free(nextP);
+}
+
+/*
+ * 242. Valid Anagram
+ * URL: https://leetcode.com/problems/valid-anagram/
+ */
+bool isAnagram(char* s, char* t) {
+    if ((!s || !t) || strlen(s) != strlen(t))
+        return false;
+    
+    if (strcmp(s, t) == 0)
+        return true;
+    
+    int sCount[26] = {0}, tCount[26] = {0};
+    
+    for (int i = 0; s[i] != '\0'; ++i) {
+        ++sCount[s[i] - 'a'];
+        ++tCount[t[i] - 'a'];
+    }
+    
+    for (int i = 0; i < 26; ++i) {
+        if (sCount[i] != tCount[i])
+            return false;
+    }
+    
+    return true;
+}
+
 int main(int argc, char* argv[]) {
     int arr[4] = {1,2,3,1};
     
