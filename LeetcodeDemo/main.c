@@ -2065,6 +2065,76 @@ bool isAnagram(char* s, char* t) {
     return true;
 }
 
+/*
+ * 257. Binary Tree Paths
+ * URL: https://leetcode.com/problems/binary-tree-paths/
+ */
+int pathsNum(struct TreeNode* root);
+void Traverse(struct TreeNode* root, char** array, char* spre, int* pIndex);
+char** binaryTreePaths(struct TreeNode* root, int* returnSize) {
+    int index = 0;
+    
+    if (!root)
+        return NULL;
+    
+    int paths = (*returnSize) = pathsNum(root);
+    char** pathsArray = (char**)calloc(paths, sizeof(char*));
+    
+    Traverse(root, pathsArray, "", &index);
+    
+    return pathsArray;
+}
+
+int pathsNum(struct TreeNode* root) {
+    if (!root)
+        return 0;
+    
+    if (!root->left && !root->right)
+        return 1;
+    
+    return pathsNum(root->left) + pathsNum(root->right);
+}
+
+char* stringAdd(char* s, int val) {
+    char temp[10];
+    
+    if (strlen(s) == 0)
+        sprintf(temp, "%d", val);
+    else
+        sprintf(temp, "->%d", val);
+    
+    char* snew = (char*)calloc(strlen(s) + strlen(temp) + 1, sizeof(char));
+    
+    strcpy(snew, s);
+    strcat(snew, temp);
+    
+    return snew;
+}
+
+void Traverse(struct TreeNode* root, char** array, char* spre, int* pIndex) {
+    char* s;
+    
+    if (!root->left && !root->right) {
+        s = stringAdd(spre, root->val);
+        
+        array[(*pIndex)++] = s;
+    }
+    
+    if (root->left) {
+        s = stringAdd(spre, root->val);
+        
+        Traverse(root->left, array, s, pIndex);
+        free(s);
+    }
+    
+    if (root->right) {
+        s = stringAdd(spre, root->val);
+        
+        Traverse(root->right, array, s, pIndex);
+        free(s);
+    }
+}
+
 int main(int argc, char* argv[]) {
     int arr[4] = {1,2,3,1};
     
