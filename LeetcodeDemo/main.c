@@ -2254,6 +2254,34 @@ void moveZeroes(int* nums, int numsSize) {
     }
 }
 
+/*
+ * 290. Word Pattern
+ * URL: https://leetcode.com/problems/word-pattern/
+ */
+bool wordPattern(char* pattern, char* str) {
+    
+    
+    
+}
+
+void split(char* src, const char* separator, char** dest, int* num) {
+    if ((src == NULL || strlen(src) == 0) ||
+        (separator == NULL || strlen(separator) == 0))
+        return ;
+    
+    int count = 0;
+    char* pNext = strtok(src, separator);
+    
+    while (pNext) {
+        *dest++ = pNext;        // (*dest) = pNext; ++dest;
+        
+        ++count;
+        pNext = strtok(NULL, separator);
+    }
+    
+    *num = count;
+}
+
 int main(int argc, char* argv[]) {
     int arr[10] = {4,2,4,0,0,3,0,5,1,0};
     
