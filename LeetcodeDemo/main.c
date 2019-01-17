@@ -2135,10 +2135,33 @@ void Traverse(struct TreeNode* root, char** array, char* spre, int* pIndex) {
     }
 }
 
-int main(int argc, char* argv[]) {
-    int arr[4] = {1,2,3,1};
+/*
+ * 258. Add Digits
+ * URL: https://leetcode.com/problems/add-digits/
+ */
+int addDigits(int num) {
+    if (num == 0)
+        return 0;
     
-    printf("%d\n", containsDuplicate(arr, 4));
+    int sum = 0;
+    while (num != 0) {
+        sum = 0;
+        while (num != 0) {
+            sum += (num % 10);
+            num /= 10;
+        }
+        
+        if (sum < 10)
+            break;
+        
+        num = sum;
+    }
+    
+    return sum;
+}
+
+int main(int argc, char* argv[]) {
+    printf("%d\n", addDigits(3118));
     
     return 0;
 }
