@@ -2160,8 +2160,104 @@ int addDigits(int num) {
     return sum;
 }
 
+/*
+ * 263. Ugly Number
+ * URL: https://leetcode.com/problems/ugly-number/
+ */
+bool isUgly(int num) {
+    if (num == 0 || num == 1)
+        return false;
+    
+    while (num != 1) {
+        if (num % 2 == 0) {
+            num /= 2;
+            
+            continue;
+        } else if (num % 3 == 0) {
+            num /= 3;
+            
+            continue;
+        } else if (num % 5 == 0) {
+            num /= 5;
+            
+            continue;
+        }
+        
+        return false;
+    }
+    
+    return true;
+}
+
+/*
+ * 268. Missing Number
+ * URL: https://leetcode.com/problems/missing-number/
+ */
+int missingNumber(int* nums, int numsSize) {
+    // notice that total sum added from 1
+    int sumNum = 0, totalSum = 0;
+    
+    for (int i = 0; i < numsSize; ++i) {
+        sumNum += nums[i];
+        totalSum += (i + 1);
+    }
+    
+    return totalSum - sumNum;
+}
+
+/*
+ * 278. First Bad Version
+ * URL: https://leetcode.com/problems/first-bad-version/
+ */
+// Forward declaration of isBadVersion API.
+//bool isBadVersion(int version);
+//
+//int firstBadVersion(int n) {
+//    int left = 0, right = n;
+//
+//    while (left < right) {
+//        int mid = left + (right - left) / 2;
+//
+//        if (isBadVersion(mid))
+//            right = mid;
+//        else
+//            left = mid + 1;
+//    }
+//
+//    return left;
+//}
+
+/*
+ * 283. Move Zeroes
+ * URL: https://leetcode.com/problems/move-zeroes/
+ */
+void moveZeroes(int* nums, int numsSize) {
+    if (numsSize == 0 || numsSize == 1)
+        return ;
+    
+    int zeroCount = 0;
+    
+    // from back to start, loop array
+    for (int i = numsSize - 1; i >= 0; --i) {
+        if (nums[i] != 0)
+            continue;
+        
+        // find 0, move 0 to end
+        ++zeroCount;
+        
+        int j = i;
+        for (j = i; j < numsSize - zeroCount; ++j) {
+            nums[j] = nums[j + 1];
+        }
+        
+        nums[j] = 0;
+    }
+}
+
 int main(int argc, char* argv[]) {
-    printf("%d\n", addDigits(3118));
+    int arr[10] = {4,2,4,0,0,3,0,5,1,0};
+    
+    moveZeroes(arr, 10);
     
     return 0;
 }
