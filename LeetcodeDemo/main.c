@@ -2258,10 +2258,56 @@ void moveZeroes(int* nums, int numsSize) {
  * 290. Word Pattern
  * URL: https://leetcode.com/problems/word-pattern/
  */
+void split(char* src, const char* separator, char** dest, int* num);
 bool wordPattern(char* pattern, char* str) {
+    if (str == NULL || pattern == NULL)
+        return false;
     
+    int patternLen = (int)strlen(pattern);
     
+    if (patternLen == 0)
+        return false;
     
+    // space is separator
+    char* separator = " ";
+    char* dest[255] = {0};
+    int strSplitCount = 0;
+    
+    const int strLen = (int)strlen(str);
+    char* strCopy = (char*)calloc(strLen, sizeof(char));
+    
+    memcpy(strCopy, str, sizeof(char) * strLen);
+    
+    split(strCopy, separator, dest, &strSplitCount);
+    
+    if (strSplitCount == 0 ||
+        (patternLen != strSplitCount))
+        return false;
+    
+    // Three are 26 charaters
+    char** patternDictArr = (char**)calloc(26, sizeof(char*));
+    
+    for (int i = 0; i < patternLen; ++i) {
+        char curPattern = pattern[i];
+        char* curPatternArr = patternDictArr[curPattern - 'a'];
+        
+        if (!curPatternArr) {
+            // if previous dict value is equal to dest[i], it would be false
+            for (int j = 0; j < 26; ++j) {
+                if (patternDictArr[j] &&
+                    strcmp(patternDictArr[j], dest[i]) == 0)  {
+                    return false;
+                }
+            }
+            
+            patternDictArr[curPattern - 'a'] = dest[i];
+        } else {
+            if (strcmp(curPatternArr, dest[i]) != 0)
+                return false;
+        }
+    }
+    
+    return true;
 }
 
 void split(char* src, const char* separator, char** dest, int* num) {
@@ -2282,10 +2328,69 @@ void split(char* src, const char* separator, char** dest, int* num) {
     *num = count;
 }
 
-int main(int argc, char* argv[]) {
-    int arr[10] = {4,2,4,0,0,3,0,5,1,0};
+/*
+ * 292. Nim Game
+ * URL: https://leetcode.com/problems/nim-game/
+ */
+bool canWinNim(int n) {
+    return n % 4 ? true : false;
+}
+
+/*
+ * 303. Range Sum Query - Immutable
+ * URL: https://leetcode.com/problems/range-sum-query-immutable/
+ */
+typedef struct {
+    int* sumNums;
+    int size;
+} NumArray;
+
+NumArray* numArrayCreate(int* nums, int numsSize) {
+    NumArray* numArr = (NumArray*)malloc(sizeof(NumArray));
     
-    moveZeroes(arr, 10);
+    if (!numArr)
+        return NULL;
+    
+    numArr->sumNums = (int*)calloc(numsSize, sizeof(int));
+    numArr->size = numsSize;
+    
+    // assign each number value
+    for (int i = 0; i < numsSize; ++i) {
+        int lastSum = (i == 0) ? 0 : numArr->sumNums[i - 1];
+        
+        numArr->sumNums[i] = lastSum + nums[i];
+    }
+    
+    return numArr;
+}
+
+void numArrayTraverse(NumArray* obj) {
+    for (int i = 0; i < obj->size; ++i) {
+        printf("%d ", obj->sumNums[i]);
+    }
+    
+    putchar('\n');
+}
+
+int numArraySumRange(NumArray* obj, int i, int j) {
+    return obj->sumNums[j] - (i == 0 ? 0 : obj->sumNums[i - 1]);
+}
+
+void numArrayFree(NumArray* obj) {
+    free(obj->sumNums);
+    free(obj);
+}
+
+
+int main(int argc, char* argv[]) {
+    int nums[6] = {-2, 0, 3, -5, 2, -1};
+    
+    NumArray* numArr = numArrayCreate(nums, 6);
+    
+    numArrayTraverse(numArr);
+    
+    
+    numArrayFree(numArr);
     
     return 0;
 }
