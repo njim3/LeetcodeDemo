@@ -2381,6 +2381,25 @@ void numArrayFree(NumArray* obj) {
     free(obj);
 }
 
+/*
+ * 326. Power of Three
+ * URL: https://leetcode.com/problems/power-of-three/
+ */
+bool isPowerOfThree(int n) {
+    return n > 0 ? !(1162261467 % n) : false;
+}
+
+/*
+ * 342. Power of Four
+ * URL: https://leetcode.com/problems/power-of-four/
+ */
+bool isPowerOfFour(int num) {
+    if (num < 0)
+        return false;
+    
+    return ((num & (num - 1)) == 0) && (num - 1) % 3 == 0;
+}
+
 
 int main(int argc, char* argv[]) {
     int nums[6] = {-2, 0, 3, -5, 2, -1};
