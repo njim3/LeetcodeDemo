@@ -2400,16 +2400,90 @@ bool isPowerOfFour(int num) {
     return ((num & (num - 1)) == 0) && (num - 1) % 3 == 0;
 }
 
+/*
+ * 344. Reverse String
+ * URL: https://leetcode.com/problems/reverse-string/
+ */
+void reverseString(char* s, int sSize) {
+    if (sSize == 0)
+        return ;
+    
+    char tmpCh = ' ';
+    int left = 0, right = sSize - 1;
+    
+    while (left < right) {
+        tmpCh = s[left];
+        s[left] = s[right];
+        s[right] = tmpCh;
+        
+        ++left;
+        --right;
+    }
+}
+
+/*
+ * 345. Reverse Vowels of a String
+ * URL: https://leetcode.com/problems/reverse-vowels-of-a-string/
+ */
+bool isCharVowel(char ch);
+char* reverseVowels(char* s) {
+    // vowels contain a,e,i,o,u
+    if (s == NULL)
+        return NULL;
+    
+    char tmpCh = ' ';
+    int left = 0, right = (int)strlen(s) - 1;
+    
+    while (left <= right) {
+        if (!isCharVowel(s[left])) {
+            ++left;
+            
+            continue;
+        }
+        
+        if (!isCharVowel(s[right])) {
+            --right;
+            
+            continue;
+        }
+        
+        // change
+        tmpCh = s[left];
+        s[left] = s[right];
+        s[right] = tmpCh;
+        
+        ++left;
+        --right;
+    }
+    
+    return s;
+}
+
+bool isCharVowel(char ch) {
+    if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' ||
+        ch == 'A' || ch == 'E' || ch == 'I' || ch == 'O' || ch == 'U')
+        return true;
+    
+    return false;
+}
+
+/*
+ * 349. Intersection of Two Arrays
+ * URL: https://leetcode.com/problems/intersection-of-two-arrays/
+ */
+int* intersection(int* nums1, int nums1Size, int* nums2, int nums2Size,
+                  int* returnSize) {
+    
+    
+    
+}
+
 
 int main(int argc, char* argv[]) {
-    int nums[6] = {-2, 0, 3, -5, 2, -1};
+    char str[41] = "Trap a rat! Stare, piper, at Star apart.";
+    char* newStr = reverseVowels(str);
     
-    NumArray* numArr = numArrayCreate(nums, 6);
-    
-    numArrayTraverse(numArr);
-    
-    
-    numArrayFree(numArr);
+    printf("%s\n%s\n", str, newStr);
     
     return 0;
 }
