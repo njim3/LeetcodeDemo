@@ -2471,19 +2471,142 @@ bool isCharVowel(char ch) {
  * 349. Intersection of Two Arrays
  * URL: https://leetcode.com/problems/intersection-of-two-arrays/
  */
+int comp(const void* a, const void* b);
 int* intersection(int* nums1, int nums1Size, int* nums2, int nums2Size,
                   int* returnSize) {
+    int shortSize = nums1Size > nums2Size ? nums2Size : nums1Size;
+    int* returnNums = (int*)calloc(shortSize, sizeof(int));
     
+    (*returnSize) = 0;
     
+    // sort using qsort
+    qsort(nums1, nums1Size, sizeof(int), comp);
+    qsort(nums2, nums2Size, sizeof(int), comp);
     
+    for (int i = 0, j = 0; i < nums1Size && j < nums2Size;) {
+        while (i < nums1Size && nums1[i] < nums2[j])
+            ++i;
+        
+        if (nums1[i] == nums2[j]) {
+            returnNums[*returnSize] = nums1[i];
+            
+            // remove duplicate
+            while (i < nums1Size && nums1[i] == returnNums[*returnSize])
+                ++i;
+            while (j< nums2Size && nums2[j] == returnNums[*returnSize])
+                ++j;
+            
+            ++(*returnSize);
+        }
+        
+        while (j < nums2Size && nums2[j] < nums1[i])
+            ++j;
+    }
+    
+    return returnNums;
 }
 
+int comp(const void* a, const void* b) {
+    return *(int*)a > *(int*)b;
+}
+
+/*
+ * 350. Intersection of Two Arrays II
+ * URL: https://leetcode.com/problems/intersection-of-two-arrays-ii/
+ */
+int compareInt(const void* a, const void* b);
+int* intersect(int* nums1, int nums1Size, int* nums2, int nums2Size,
+               int* returnSize) {
+    int shortSize = nums1Size > nums2Size ? nums2Size : nums1Size;
+    int* returnNums = (int*)calloc(shortSize, sizeof(int));
+    
+    (*returnSize) = 0;
+    
+    // sort using qsort
+    qsort(nums1, nums1Size, sizeof(int), compareInt);
+    qsort(nums2, nums2Size, sizeof(int), compareInt);
+    
+    int i = 0, j = 0;
+    while (i < nums1Size && j < nums2Size) {
+        if (nums1[i] == nums2[j]) {
+            returnNums[(*returnSize)] = nums1[i];
+            
+            ++i;
+            ++j;
+            ++(*returnSize);
+        } else if (nums1[i] < nums2[j])
+            ++i;
+        else
+            ++j;
+    }
+    
+    return returnNums;
+}
+
+int compareInt(const void* a, const void* b) {
+    if ((*(int*)a) == (*(int*)b))
+        return 0;
+    
+    return (*(int*)a) > (*(int*)b) ? 1: -1;
+}
+
+/*
+ * 367. Valid Perfect Square
+ * URL: https://leetcode.com/problems/valid-perfect-square/
+ */
+bool isPerfectSquare(int num) {
+    if (num == 1)
+        return true;
+    
+    unsigned long left = 1, right = num;
+    unsigned long middle = num / 2;
+    
+    while (true) {
+        if (middle * middle > num) {
+            if ((middle - 1) * (middle - 1) < num)
+                return false;
+            
+            right = middle;
+            middle = (left + right) / 2;
+        } else if (middle * middle < num) {
+            if ((middle + 1) * (middle + 1) > num)
+                return false;
+            
+            left = middle;
+            middle = (left + right) / 2;
+        } else
+            break;
+    }
+    
+    return true;
+}
+
+bool isPerfectSquare2(int num) {
+    if (num == 1)
+        return true;
+    
+    unsigned long left = 1, right = num;
+    
+    while (left < right) {
+        unsigned long middle = (left + right) / 2;
+        
+        if (middle * middle > num) {
+            right = middle;
+        } else if (middle * middle < num) {
+            left = middle;
+        } else
+            return true;
+        
+        if ((left * left) < num && (right * right) > num &&
+            (right - left == 1))
+            return false;
+    }
+    
+    return false;
+}
 
 int main(int argc, char* argv[]) {
-    char str[41] = "Trap a rat! Stare, piper, at Star apart.";
-    char* newStr = reverseVowels(str);
-    
-    printf("%s\n%s\n", str, newStr);
+    printf("%d\n", isPerfectSquare2(2147483647));
     
     return 0;
 }
