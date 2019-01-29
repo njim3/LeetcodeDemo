@@ -2605,6 +2605,20 @@ bool isPerfectSquare2(int num) {
     return false;
 }
 
+/*
+ * 371. Sum of Two Integers
+ * URL: https://leetcode.com/problems/sum-of-two-integers/
+ */
+int getSum(int a, int b) {
+    while (b) {
+        int c = a ^ b;
+        b = (a & b) << 1;
+        a = c;
+    }
+    
+    return a;
+}
+
 int main(int argc, char* argv[]) {
     printf("%d\n", isPerfectSquare2(2147483647));
     
