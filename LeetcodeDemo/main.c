@@ -2619,6 +2619,100 @@ int getSum(int a, int b) {
     return a;
 }
 
+/*
+ * 383. Ransom Note
+ * URL: https://leetcode.com/problems/ransom-note/
+ */
+bool canConstruct(char* ransomNote, char* magazine) {
+    int* countArr = (int*)calloc(26, sizeof(int));
+    int count = 0;
+    int ransomSize = (int)strlen(ransomNote);
+    int magzaineSize = (int)strlen(magazine);
+    
+    for (int i = 0; i < ransomSize; ++i) {
+        ++countArr[ransomNote[i] - 'a'];
+        
+        ++count;
+    }
+    
+    for (int i = 0; i < magzaineSize && count > 0; ++i) {
+        if (countArr[magazine[i] - 'a'] > 0) {
+            --countArr[magazine[i] - 'a'];
+            
+            --count;
+        }
+    }
+    
+    free(countArr);
+    
+    if (count)
+        return false;
+    
+    return true;
+}
+
+/*
+ * 387. First Unique Character in a String
+ * URL: https://leetcode.com/problems/first-unique-character-in-a-string/
+ */
+int firstUniqChar(char* s) {
+    int strSize = (int)strlen(s);
+    if (strSize == 0)
+        return -1;
+    
+    int* countArr = (int*)calloc(26, sizeof(int));
+    
+    for (int i = 0; i < strSize; ++i)
+        ++countArr[s[i] - 'a'];
+    
+    int index = -1;
+    for (int i = 0; i < strSize; ++i) {
+        if (countArr[s[i] - 'a'] == 1) {
+            index = i;
+            break;
+        }
+    }
+    
+    free(countArr);
+    return index;
+}
+
+/*
+ * 389. Find the Difference
+ * URL: https://leetcode.com/problems/find-the-difference/
+ */
+char findTheDifference(char* s, char* t) {
+    int sSize = (int)strlen(s), tSize = (int)strlen(t);
+    int* countArr = (int*)calloc(26, sizeof(int));
+    
+    for (int i = 0; i < tSize; ++i)
+        ++countArr[t[i] - 'a'];
+    
+    for (int i = 0; i < sSize; ++i)
+        --countArr[s[i] - 'a'];
+    
+    int index = -1;
+    
+    for (int i = 0; i < 26; ++i) {
+        if (countArr[i] == 1) {
+            index = i;
+            
+            break;
+        }
+    }
+    
+    return index + 'a';
+}
+
+/*
+ * 400. Nth Digit
+ * URL: https://leetcode.com/problems/nth-digit/
+ */
+int findNthDigit(int n) {
+    
+    
+}
+
 int main(int argc, char* argv[]) {
     printf("%d\n", isPerfectSquare2(2147483647));
     
