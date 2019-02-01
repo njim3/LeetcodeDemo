@@ -2709,12 +2709,33 @@ char findTheDifference(char* s, char* t) {
  * URL: https://leetcode.com/problems/nth-digit/
  */
 int findNthDigit(int n) {
+    // confirm scope
+    int digit = 1;
+    int remain = 0;
+    int tempN = n;
     
+    while (true) {
+        remain = tempN - 9 * pow(10, digit - 1) * digit;
+        
+        if (remain <= 0) {
+            remain = tempN;
+            break;
+        }
+        
+        ++digit;
+        tempN = remain;
+    }
     
+    // calculate the number
+    int theNum = (remain - 1) / digit + pow(10, digit - 1);
+    int pos = (remain - 1) % digit;
+    int nThDigit = theNum / (int)pow(10, digit - pos - 1) % 10;
+    
+    return nThDigit ;
 }
 
 int main(int argc, char* argv[]) {
-    printf("%d\n", isPerfectSquare2(2147483647));
+    printf("%d\n", findNthDigit(15));
     
     return 0;
 }
