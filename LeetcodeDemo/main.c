@@ -2734,8 +2734,317 @@ int findNthDigit(int n) {
     return nThDigit ;
 }
 
+/*
+ * 401. Binary Watch
+ * URL: https://leetcode.com/problems/binary-watch/
+ */
+int countOne(int num);
+char** readBinaryWatch(int num, int* returnSize) {
+    if (num == 0) {
+        (*returnSize) = 1;
+        
+        char** resultArr = (char**)calloc(1, sizeof(char*));
+        
+        resultArr[0] = (char*)calloc(6, sizeof(char));
+        resultArr[0] = "0:00";
+        
+        return resultArr;
+    }
+    
+    char** resultArr = (char**)calloc(1000, sizeof(char*));
+    int hourOneNum = 0, minOneNum = 0, totalOneNum = 0;
+    int count = 0;
+    
+    for (int i = 0; i < 12; ++i) {
+        hourOneNum = countOne(i);
+        
+        for (int j = 0; j < 60; ++j) {
+            minOneNum = countOne(j);
+            totalOneNum = hourOneNum + minOneNum;
+            
+            if (totalOneNum == num) {
+                // save
+                resultArr[count] = (char*)calloc(6, sizeof(char*));
+                sprintf(resultArr[count], "%d:%02d", i, j);
+                ++count;
+            }
+        }
+    }
+    
+    (*returnSize) = count;
+    
+    return resultArr;
+}
+
+int countOne(int num) {
+    int oneNum = 0;
+    
+    while (num) {
+        oneNum += num & 1;
+        num >>= 1;
+    }
+    
+    return oneNum;
+}
+
+/*
+ * 404. Sum of Left Leaves
+ * URL: https://leetcode.com/problems/sum-of-left-leaves/
+ */
+void traverseLeft(struct TreeNode* node, int* sum, bool isLeft);
+int sumOfLeftLeaves(struct TreeNode* root) {
+    int sum = 0;
+    
+    traverseLeft(root, &sum, false);
+    
+    return sum;
+}
+void traverseLeft(struct TreeNode* node, int* sum, bool isLeft) {
+    if (!node)
+        return ;
+    
+    if (node->left == NULL && node->right == NULL && isLeft) {
+        (*sum) += node->val;
+        
+        return ;
+    }
+    
+    traverseLeft(node->left, sum, true);
+    traverseLeft(node->right, sum, false);
+}
+
+/*
+ * 405. Convert a Number to Hexadecimal
+ * URL: https://leetcode.com/problems/convert-a-number-to-hexadecimal/
+ */
+int getHexSize(int num);
+char* toHex(int num) {
+    uint32_t uNum = num;
+    int hexSize = getHexSize(uNum);
+    
+    char* hexStr = (char*)calloc(hexSize + 1, sizeof(char));
+    hexStr[hexSize] = '\0';
+    
+    if (uNum == 0) {
+        hexStr[0] = '0';
+        return hexStr;
+    }
+    
+    int index = hexSize - 1;
+    char* hexCharMap = "0123456789abcdef";
+    
+    while (uNum > 0) {
+        hexStr[index] = hexCharMap[uNum & 15];
+        
+        uNum >>= 4;
+        --index;
+    }
+    
+    return hexStr;
+}
+
+int getHexSize(int num) {
+    int mask = 16, size = 1;
+    
+    while ((num & (mask - 1)) != num) {
+        mask <<= 4;
+        ++size;
+    }
+    
+    return size;
+}
+
+/*
+ * 409. Longest Palindrome
+ * URL: https://leetcode.com/problems/longest-palindrome/
+ */
+int longestPalindrome(char* s) {
+    int len = (int)strlen(s);
+    
+    if (len == 0)
+        return 0;
+    
+    int* chMapArr = (int*)calloc(58, sizeof(int));
+    
+    for (int i = 0; i < len; ++i)
+        ++chMapArr[s[i] - 'A'];
+    
+    int result = 0;
+    bool isHaveOdd = false;
+    
+    for (int i = 0; i < 58; ++i) {
+        if (i > 25 && i < 32)
+            continue;
+        
+        if (chMapArr[i] % 2 == 0)
+            result += chMapArr[i];
+        else {
+            isHaveOdd = true;
+            
+            result += (chMapArr[i] - 1);
+        }
+    }
+    
+    free(chMapArr);
+    
+    return result + (isHaveOdd ? 1 : 0);
+}
+
+/*
+ * 849. Maximize Distance to Closest Person
+ * URL: https://leetcode.com/problems/maximize-distance-to-closest-person/
+ */
+int maxDistance(int dis1, int dis2);
+int maxDistToClosest(int* seats, int seatsSize) {
+    int maxDist = 0, zeroLens = 0;
+    
+    for (int i = 0; i < seatsSize; ++i) {
+        if (seats[i] == 0)
+            ++zeroLens;
+        else
+            zeroLens = 0;
+        
+        maxDist = maxDistance(maxDist, (zeroLens + 1) / 2);
+    }
+    
+    // begin with 0, end with 0
+    for (int i = 0; i < seatsSize; ++i) {
+        if (seats[i] == 1) {
+            maxDist = maxDistance(maxDist, i);
+            
+            break;
+        }
+    }
+    for (int i = seatsSize - 1; i >= 0; --i) {
+        if (seats[i] == 1) {
+            maxDist = maxDistance(maxDist, seatsSize - i - 1);
+            
+            break;
+        }
+    }
+    
+    return maxDist;
+}
+
+int maxDistance(int dis1, int dis2) {
+    return dis1 > dis2 ? dis1 : dis2;
+}
+
+int minDistance(int dis1, int dis2) {
+    return dis1 > dis2 ? dis2 : dis1;
+}
+
+int maxDistToClosest2(int* seats, int seatsSize) {
+    if (seatsSize == 0)
+        return 0;
+    
+    int* leftCountArr = (int*)malloc(seatsSize * sizeof(int));
+    int* rightCountArr = (int*)malloc(seatsSize * sizeof(int));
+    
+    // initialize
+    for (int i = 0; i < seatsSize; ++i) {
+        leftCountArr[i] = seatsSize;
+        rightCountArr[i] = seatsSize;
+    }
+    
+    // left and right arr
+    for (int i = 0; i < seatsSize; ++i) {
+        if (seats[i] == 1) {
+            leftCountArr[i] = 0;
+        } else {
+            if (i > 0) {
+                leftCountArr[i] = leftCountArr[i - 1] + 1;
+            }
+        }
+    }
+    
+    for (int i = seatsSize - 1; i >= 0; --i) {
+        if (seats[i] == 1) {
+            rightCountArr[i] = 0;
+        } else {
+            if (i < seatsSize - 1) {
+                rightCountArr[i] = rightCountArr[i + 1] + 1;
+            }
+        }
+    }
+    
+    int maxDis = 0;
+    for (int i = 0; i < seatsSize; ++i) {
+        if (seats[i] == 0) {
+            maxDis = maxDistance(maxDis,
+                                 minDistance(leftCountArr[i], rightCountArr[i]));
+        }
+    }
+    
+    free(leftCountArr);
+    free(rightCountArr);
+    
+    return maxDis;
+}
+
+/*
+ * 412. Fizz Buzz
+ * URL: https://leetcode.com/problems/fizz-buzz/
+ */
+char** fizzBuzz(int n, int* returnSize) {
+    if (n == 0) {
+        (*returnSize) = 0;
+        
+        return NULL;
+    }
+    
+    char** returnArr = (char**)malloc(n * sizeof(char*));
+    (*returnSize) = n;
+    
+    for (int i = 1; i <= (*returnSize); ++i) {
+        char* itemStr = NULL;
+        if (i % 3 == 0 || i % 5 == 0) {
+            if (i % 3 == 0 && i % 5 == 0) {
+                itemStr = (char*)calloc(9, sizeof(char));
+                
+                itemStr = "FizzBuzz";
+            } else {
+                itemStr = (char*)calloc(5, sizeof(char));
+                
+                if (i % 3 == 0)
+                    itemStr = "Fizz";
+                else
+                    itemStr = "Buzz";
+            }
+        } else {
+            int len = 1, tmpTen = 10;
+            
+            while (i / tmpTen) {
+                tmpTen *= 10;
+                ++len;
+            }
+            
+            itemStr = (char*)calloc(len + 1, sizeof(char));
+            int num = i;
+            
+            do {
+                itemStr[len - 1] = num % 10 + 48;
+                num /= 10;
+                --len;
+            } while (num != 0);
+        }
+        
+        returnArr[i - 1] = itemStr;
+    }
+    
+    return returnArr;
+}
+
+
 int main(int argc, char* argv[]) {
-    printf("%d\n", findNthDigit(15));
+    int returnSize = 0;
+    char** returnArr = fizzBuzz(15, &returnSize);
+    
+    for (int i = 0; i < returnSize; ++i) {
+        printf("%s\n", returnArr[i]);
+    }
+    
+    free(returnArr);
     
     return 0;
 }
