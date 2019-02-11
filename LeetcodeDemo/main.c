@@ -3040,9 +3040,28 @@ char** fizzBuzz(int n, int* returnSize) {
  * URL: https://leetcode.com/problems/third-maximum-number/
  */
 int thirdMax(int* nums, int numsSize) {
+    long first = LONG_MIN, second = LONG_MIN, third = LONG_MIN;
     
+    for (int i = 0; i < numsSize; ++i) {
+        if (nums[i] >= first) {
+            if (nums[i] != first) {
+                third = second;
+                second = first;
+                first = nums[i];
+            }
+        } else if (nums[i] >= second) {
+            if (nums[i] != second) {
+                third = second;
+                second = nums[i];
+            }
+        } else if (nums[i] >= third) {
+            if (nums[i] != third) {
+                third = nums[i];
+            }
+        }
+    }
     
-    
+    return (int)(third > LONG_MIN ? third : first);
 }
 
 
