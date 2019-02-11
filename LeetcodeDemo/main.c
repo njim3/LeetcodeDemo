@@ -3035,6 +3035,16 @@ char** fizzBuzz(int n, int* returnSize) {
     return returnArr;
 }
 
+/*
+ * 414. Third Maximum Number
+ * URL: https://leetcode.com/problems/third-maximum-number/
+ */
+int thirdMax(int* nums, int numsSize) {
+    
+    
+    
+}
+
 
 int main(int argc, char* argv[]) {
     int returnSize = 0;
