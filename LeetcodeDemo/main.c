@@ -3064,16 +3064,39 @@ int thirdMax(int* nums, int numsSize) {
     return (int)(third > LONG_MIN ? third : first);
 }
 
-
-int main(int argc, char* argv[]) {
-    int returnSize = 0;
-    char** returnArr = fizzBuzz(15, &returnSize);
+/*
+ * 434. Number of Segments in a String
+ * URL: https://leetcode.com/problems/number-of-segments-in-a-string/
+ */
+int countSegments(char* s) {
+    if (!s)
+        return 0;
     
-    for (int i = 0; i < returnSize; ++i) {
-        printf("%s\n", returnArr[i]);
+    int sLen = (int)strlen(s);
+    
+    if (sLen == 0)
+        return 0;
+    
+    int segment = 0;
+    bool isSegment = false;
+    
+    for (int i = 0; i < sLen; ++i) {
+        if (s[i] != ' ') {
+            if (!isSegment)
+                ++segment;
+            
+            isSegment = true;
+        } else {
+            isSegment = false;
+        }
     }
     
-    free(returnArr);
+    return segment;
+}
+
+
+int main(int argc, char* argv[]) {
+    printf("%d\n", countSegments(", , , , "));
     
     return 0;
 }
