@@ -3094,6 +3094,60 @@ int countSegments(char* s) {
     return segment;
 }
 
+/*
+ * 437. Path Sum III
+ * URL: https://leetcode.com/problems/path-sum-iii/
+ */
+void allPathSum(struct TreeNode* root, int sum, int* pathArr, int level,
+                int* count);
+int pathSum(struct TreeNode* root, int sum) {
+    int count = 0;
+    
+    allPathSum(root, sum, NULL, 1, &count);
+    
+    return count;
+}
+
+void allPathSum(struct TreeNode* root, int sum, int* pathArr, int level,
+                int* count) {
+    if (!root)
+        return ;
+    
+    int* newPathArr = (int*)malloc(level * sizeof(int));
+    int i = 0;
+    
+    for (i = 0; i < level - 1; ++i)
+        newPathArr[i] = pathArr[i] + root->val;
+    
+    newPathArr[i] = root->val;
+    
+    for (i = 0; i < level; ++i) {
+        if (newPathArr[i] == sum)
+            (*count) += 1;
+    }
+    
+    allPathSum(root->left, sum, newPathArr, level + 1, count);
+    allPathSum(root->right, sum, newPathArr, level + 1, count);
+    
+    free(newPathArr);
+}
+
+/*
+ * 438. Find All Anagrams in a String
+ * URL: https://leetcode.com/problems/find-all-anagrams-in-a-string/
+ */
+int* findAnagrams(char* s, char* p, int* returnSize) {
+    if (!s || !p)
+        return NULL;
+    
+    int sLen = (int)strlen(s), pLen = (int)strlen(p);
+    if (sLen < pLen)
+        return NULL;
+    
+    
+    
+    
+}
 
 int main(int argc, char* argv[]) {
     printf("%d\n", countSegments(", , , , "));
