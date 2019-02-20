@@ -3136,6 +3136,7 @@ void allPathSum(struct TreeNode* root, int sum, int* pathArr, int level,
  * 438. Find All Anagrams in a String
  * URL: https://leetcode.com/problems/find-all-anagrams-in-a-string/
  */
+bool is2HashEqual(int* sHash, int* pHash);
 int* findAnagrams(char* s, char* p, int* returnSize) {
     if (!s || !p)
         return NULL;
@@ -3144,13 +3145,93 @@ int* findAnagrams(char* s, char* p, int* returnSize) {
     if (sLen < pLen)
         return NULL;
     
+    int* pHash = (int*)calloc(26, sizeof(int));
+    int* sHash = (int*)calloc(26, sizeof(int));
     
+    int* returnArr = (int*)calloc(sLen, sizeof(int));
+    (*returnSize) = 0;
     
+    for (int i = 0; i < pLen; ++i) {
+        ++pHash[p[i] - 'a'];
+        ++sHash[s[i] - 'a'];
+    }
     
+    for (int i = 0; i <= sLen - pLen; ++i) {
+        if (i != 0) {
+            ++sHash[s[i + pLen - 1] - 'a'];
+        }
+        
+        if (is2HashEqual(sHash, pHash)) {
+            returnArr[(*returnSize)++] = i;
+        }
+        
+        --sHash[s[i] - 'a'];
+    }
+    
+    free(pHash);
+    free(sHash);
+    
+    return returnArr;
 }
 
+bool is2HashEqual(int* sHash, int* pHash) {
+    for (int i = 0; i < 26; ++i) {
+        if (sHash[i] != pHash[i])
+            return false;
+    }
+    
+    return true;
+}
+
+/*
+ * 441. Arranging Coins
+ * URL: https://leetcode.com/problems/arranging-coins/
+ */
+int arrangeCoins(int n) {
+    return sqrt(2 * (double)n + 0.25) - 0.5;
+}
+
+/*
+ * 443. String Compression
+ * URL: https://leetcode.com/problems/string-compression/
+ */
+int compress(char* chars, int charsSize) {
+    char* digits = (char*)calloc(200, sizeof(char));
+    int totalCount = 0, currentCount = 0;
+    
+    for (int i = 0; i < charsSize; ++i) {
+        ++currentCount;
+        
+        if (i == charsSize - 1 || chars[i + 1] != chars[i]) {
+            chars[totalCount] = chars[i];
+            
+            if (currentCount > 1) {
+                // digit
+                int digit = -1;
+                
+                while (currentCount != 0) {
+                    digits[++digit] = currentCount % 10 + '0';
+                    currentCount /= 10;
+                }
+                
+                for (int j = digit; j >= 0; --j)
+                    chars[++totalCount] = digits[j];
+            }
+            
+            // add the character count
+            ++totalCount;
+            currentCount = 0;
+        }
+    }
+    
+    free(digits);
+    
+    return totalCount;
+}
+
+
 int main(int argc, char* argv[]) {
-    printf("%d\n", countSegments(", , , , "));
+    printf("\n");
     
     return 0;
 }
