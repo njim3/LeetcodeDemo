@@ -3229,6 +3229,122 @@ int compress(char* chars, int charsSize) {
     return totalCount;
 }
 
+/*
+ * 447. Number of Boomerangs
+ * URL: https://leetcode.com/problems/number-of-boomerangs/
+ */
+#define HASHMAP_SIZE        500
+
+typedef struct DistanceHashMap
+{
+    int count;
+    int distance;
+    struct DistanceHashMap* next;
+} DisHashMap;
+
+void add2HashMap(DisHashMap* disHashMap, int distance) {
+    int slot = distance % HASHMAP_SIZE;
+    
+    if (disHashMap[slot].distance == distance) {
+        ++disHashMap[slot].count;
+    } else if (disHashMap[slot].distance == 0) {
+        disHashMap[slot].distance = distance;
+        
+        ++disHashMap[slot].count;
+    } else {
+        DisHashMap* p = &disHashMap[slot];
+        
+        while (p->distance != distance && p->next)
+            p = p->next;
+        
+        if (p->distance == distance) {
+            ++p->count;
+        } else {
+            p->next = (DisHashMap*)calloc(1, sizeof(DisHashMap));
+            
+            p = p->next;
+            p->count = 1;
+            p->distance = distance;
+            p->next = NULL;
+        }
+    }
+}
+
+int cal2PointDistance(int* p1, int* p2) {
+    int xDiffAbs = abs(p1[0] - p2[0]);
+    int yDiffAbs = abs(p1[1] - p2[1]);
+    
+    return xDiffAbs * xDiffAbs + yDiffAbs * yDiffAbs;
+}
+
+int numberOfBoomerangs(int** points, int pointsRowSize, int pointsColSize) {
+    if (!points || pointsRowSize == 0 || pointsColSize == 0)
+        return 0;
+    
+    int totalBoomerangs = 0;
+    DisHashMap* disHashMap = (DisHashMap*)calloc(HASHMAP_SIZE,
+                                                 sizeof(DisHashMap));
+    
+    for (int i = 0; i < pointsRowSize; ++i) {
+        // clear disHashMap
+        for (int j = 0; j < HASHMAP_SIZE; ++j) {
+            DisHashMap* curHashMap = &disHashMap[j];
+            
+            if (curHashMap->next) {
+                DisHashMap* p = curHashMap->next;
+                
+                while (p) {
+                    DisHashMap* q = p->next;
+                    
+                    free(p);
+                    p = q;
+                }
+            }
+            
+            curHashMap->next = NULL;
+            curHashMap->count = 0;
+            curHashMap->distance = 0;
+        }
+        
+        // construct distance hashmap
+        for (int j = 0; j < pointsRowSize; ++j) {
+            if (i == j)
+                continue;
+            
+            add2HashMap(disHashMap, cal2PointDistance(points[i], points[j]));
+        }
+        
+        for (int j = 0; j < HASHMAP_SIZE; ++j) {
+            DisHashMap* curHashMap = &disHashMap[j];
+            
+            while (curHashMap) {
+                if (curHashMap->count > 1) {
+                    totalBoomerangs += (curHashMap->count *
+                                        (curHashMap->count - 1));
+                }
+                
+                curHashMap = curHashMap->next;
+            }
+        }
+    }
+    
+    // free hashmap
+    for (int i = 0; i < HASHMAP_SIZE; ++i) {
+        DisHashMap* curHashMap = (&disHashMap[i])->next;
+        
+        while (curHashMap) {
+            DisHashMap* p = curHashMap;
+
+            curHashMap = curHashMap->next;
+            free(p);
+        }
+    }
+    
+    free(disHashMap);
+    
+    return totalBoomerangs;
+}
+
 
 int main(int argc, char* argv[]) {
     printf("\n");
