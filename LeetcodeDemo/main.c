@@ -3345,6 +3345,98 @@ int numberOfBoomerangs(int** points, int pointsRowSize, int pointsColSize) {
     return totalBoomerangs;
 }
 
+/*
+ * 448. Find All Numbers Disappeared in an Array
+ * URL: https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/
+ */
+int* findDisappearedNumbers(int* nums, int numsSize, int* returnSize) {
+    int* numsCountArr = (int*)calloc(numsSize + 1, sizeof(int));
+    
+    for (int i = 0; i < numsSize; ++i)
+        ++numsCountArr[nums[i]];
+    
+    numsCountArr[0] = 1;
+    
+    for (int i = 1; i <= numsSize; ++i) {
+        if (numsCountArr[i] == 0) {
+            numsCountArr[numsCountArr[0]] = i;
+            ++numsCountArr[0];
+        }
+    }
+    
+    (* returnSize) = numsCountArr[0] - 1;
+    
+    return &numsCountArr[1];
+}
+
+/*
+ * 453. Minimum Moves to Equal Array Elements
+ * URL: https://leetcode.com/problems/minimum-moves-to-equal-array-elements/
+ */
+int minMoves(int* nums, int numsSize) {
+    if (!nums || numsSize == 0)
+        return 0;
+    
+    int lowest = nums[0], index = 0;
+    
+    for (int i = 0; i < numsSize; ++i) {
+        if (nums[i] < lowest) {
+            lowest = nums[i];
+            
+            index = i;
+        }
+    }
+    
+    int step = 0;
+    
+    for (int i = 0; i < numsSize; ++i) {
+        if (i != index)
+            step += (nums[i] - lowest);
+    }
+    
+    
+    return step;
+}
+
+int minMoves2(int* nums, int numsSize) {
+    if (!nums || numsSize == 0)
+        return 0;
+    
+    long long sum = 0;
+    long long lowest = nums[0];
+    
+    for (int i = 0; i < numsSize; ++i) {
+        sum += nums[i];
+        
+        if (nums[i] < lowest)
+            lowest = nums[i];
+    }
+    
+    return (int)(sum - lowest * numsSize);
+}
+
+/*
+ * 455. Assign Cookies
+ * URL: https://leetcode.com/problems/assign-cookies/
+ */
+int findContentChildren(int* g, int gSize, int* s, int sSize) {
+    qsort(g, gSize, sizeof(int), comp);
+    qsort(s, sSize, sizeof(int), comp);
+    
+    int count = 0, j = 0;
+    
+    for (int i = 0; i < sSize; ++i) {
+        if (s[i] > g[j]) {
+            ++count;
+            ++j;
+            
+            if (j >= gSize)
+                break;
+        }
+    }
+    
+    return count;
+}
 
 int main(int argc, char* argv[]) {
     printf("\n");
