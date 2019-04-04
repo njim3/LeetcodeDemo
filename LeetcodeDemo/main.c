@@ -3438,6 +3438,75 @@ int findContentChildren(int* g, int gSize, int* s, int sSize) {
     return count;
 }
 
+/*
+ * 459. Repeated Substring Pattern
+ * URL: https://leetcode.com/problems/repeated-substring-pattern/
+ */
+bool repeatedSubstringPattern(char* s) {
+    int len = (int)strlen(s);
+    int next[len + 1], j = 0, k = -1;
+    
+    next[0] = -1;
+    
+    while (j < len) {
+        if (k == -1 || s[j] == s[k])
+            next[++j] = ++k;
+        else
+            k = next[k];
+    }
+    
+    return next[len] && next[len] % (len - next[len]) == 0;
+}
+
+/*
+ * 461. Hamming Distance
+ * URL: https://leetcode.com/problems/hamming-distance/
+ */
+int hammingDistance(int x, int y) {
+    int result = x ^ y;
+    int distance = 0;
+    
+    for (int i = 0; i < 32; ++i) {
+        if (result & 1)
+            ++distance;
+        
+        result >>= 1;
+    }
+    
+    return distance;
+}
+
+/*
+ * 463. Island Perimeter
+ * URL: https://leetcode.com/problems/island-perimeter/
+ */
+int islandPerimeter(int** grid, int gridRowSize, int gridColSize) {
+    if (!grid || gridRowSize == 0 || gridColSize == 0)
+        return 0;
+    
+    int oneCount = 0, ajaceCount = 0;
+    for (int i= 0; i < gridRowSize; ++i) {
+        for (int j = 0; j < gridColSize; ++j) {
+            if (grid[i][j] == 1) {
+                ++oneCount;
+                
+                // right side
+                if (j < gridColSize - 1 && grid[i][j + 1] == 1) {
+                    ++ajaceCount;
+                }
+                // down side
+                if (i < gridRowSize - 1 && grid[i + 1][j] == 1) {
+                    ++ajaceCount;
+                }
+            }
+        }
+    }
+    
+    return oneCount * 4 - ajaceCount * 2;
+}
+
+
+
 int main(int argc, char* argv[]) {
     printf("\n");
     
