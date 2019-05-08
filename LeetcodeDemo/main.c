@@ -3505,10 +3505,62 @@ int islandPerimeter(int** grid, int gridRowSize, int gridColSize) {
     return oneCount * 4 - ajaceCount * 2;
 }
 
+/*
+ * 475. Heaters
+ * URL: https://leetcode.com/problems/heaters/
+ */
+int compLower(const void* a, const void* b) {
+    return *((int*)a) - *((int*)b);
+}
+
+int calcMax(int a, int b) {
+    return a > b ? a : b;
+}
+
+int findRadius(int* houses, int housesSize, int* heaters, int heatersSize){
+    qsort(houses, housesSize, sizeof(int), compLower);
+    qsort(heaters, heatersSize, sizeof(int), compLower);
+    
+    int minRadius = 0, j = 0;
+    
+    for (int i = 0; i < housesSize; ++i) {
+        while ((j < heatersSize - 1) && (abs(heaters[j] - houses[i]) >=
+                                         abs(heaters[j + 1] - houses[i]))) {
+            ++j;        // Find the nearest heater
+        }
+        
+        minRadius = calcMax(minRadius, abs(heaters[j] - houses[i]));
+    }
+    
+    return minRadius;
+}
+
+/*
+ * 476. Number Complement
+ * URL: https://leetcode.com/problems/number-complement/
+ */
+int findComplement(int num){
+    if (num == 0) {
+        return 1;
+    }
+    
+    int loc = 0, complementNum = 0;
+    
+    while (num != 0) {
+        int res = num & 1;
+        
+        complementNum += pow(2, loc++) * (res == 0 ? 1 : 0);
+        
+        num >>= 1;
+    }
+    
+    return complementNum;
+}
+
 
 
 int main(int argc, char* argv[]) {
-    printf("\n");
+    findComplement(5);
     
     return 0;
 }
