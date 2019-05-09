@@ -3557,10 +3557,126 @@ int findComplement(int num){
     return complementNum;
 }
 
+/*
+ * 482. License Key Formatting
+ * URL: https://leetcode.com/problems/license-key-formatting/
+ */
+char toUpperChar(char ch);
+int keyLength(char* s);
+
+char * licenseKeyFormatting(char * S, int K){
+    int totalLen = keyLength(S);
+    int firstGroupLen = totalLen % K;
+    
+    // indicate characters length can be divided by K with no remainder
+    if (firstGroupLen == 0)
+        firstGroupLen = K;
+    
+    // add dashes and get length
+    // add (K - 1) length group to gather the first group
+    // if the first group can divided by K without remainder, so add this group
+    // is meaningless, else add the group in order to add one dashes in the result
+    totalLen += (totalLen + (K - 1)) / K - 1;
+    
+    if (totalLen < 0)
+        totalLen = 0;
+    
+    char* formatKey = (char*)malloc((totalLen + 1) * sizeof(char));
+    
+    formatKey[totalLen] = '\0';
+    
+    // i is the loop of the formatKey array
+    // j is the loop of K
+    // dashIndex is to find dash position, initialize as K + 1 - firstGroupLen
+    // to make the D-value for the first group. It will be set to 1 after find
+    // the first place of dash.
+    int i = 0, j = 0, dashIndex = K + 1 - firstGroupLen;
+    
+    while (i < totalLen) {
+        if (dashIndex == K + 1) {
+            formatKey[i++] = '-';
+            
+            dashIndex = 1;
+        } else {
+            // if S[j] is equal to '-', then jump to next,
+            // else upper S[j] and set to formatKey[i]
+            if (S[j] != '-') {
+                formatKey[i++] = toUpperChar(S[j]);
+                ++dashIndex;
+            }
+            
+            ++j;
+        }
+    }
+    
+    return formatKey;
+}
+
+int keyLength(char* s) {
+    int len = 0;
+    
+    for (int i = 0; s[i] != '\0'; ++i) {
+        if (s[i] != '-')
+            ++len;
+    }
+    
+    return len;
+}
+
+char toUpperChar(char ch) {
+    if (ch >= 'a' && ch <= 'z')
+        ch -= ('a' - 'A');
+    
+    return ch;
+}
+
+/*
+ * 485. Max Consecutive Ones
+ * URL: https://leetcode.com/problems/max-consecutive-ones/
+ */
+int findMaxConsecutiveOnes(int* nums, int numsSize){
+    int maxOneNum = 0, oneNum = 0;
+    
+    for (int i = 0; i < numsSize; ++i) {
+        if (nums[i] == 0) {
+            maxOneNum = maxOneNum < oneNum ? oneNum : maxOneNum;
+            
+            oneNum = 0;
+        } else
+            ++oneNum;
+    }
+    
+    maxOneNum = maxOneNum < oneNum ? oneNum : maxOneNum;
+    
+    return maxOneNum;
+}
+
+/*
+ * 492. Construct the Rectangle
+ * URL: https://leetcode.com/problems/max-consecutive-ones/
+ */
+int* constructRectangle(int area, int* returnSize){
+    int W = sqrt(area);
+    
+    while (area % W)
+        --W;
+    
+    int* result = (int*)malloc(2 * sizeof(int));
+    
+    result[0] = area / W;
+    result[1] = W;
+    
+    *returnSize = 2;
+    
+    return result;
+}
+
 
 
 int main(int argc, char* argv[]) {
-    findComplement(5);
+    int nums[6] = {1,1,0,1,1,1};
+    
+    printf("%d\n", findMaxConsecutiveOnes(nums, 6));
     
     return 0;
 }
