@@ -3671,12 +3671,44 @@ int* constructRectangle(int area, int* returnSize){
     return result;
 }
 
-
+/*
+ * 496. Next Greater Element I
+ * URL: https://leetcode.com/problems/next-greater-element-i/
+ */
+int* nextGreaterElement(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize){
+    int* result = (int*)malloc(sizeof(int) * nums1Size);
+    
+    (*returnSize) = nums1Size;
+    
+    for (int i = 0; i < nums1Size; ++i)
+        result[i] = -1;
+    
+    qsort(nums1, sizeof(int), nums1Size, compareInt);
+    qsort(nums2, sizeof(int), nums2Size, compareInt);
+    
+    int k = 0;
+    for (int i = 0; i < nums1Size; ++i) {
+        int j = 0;
+        for (j = 0; j < nums2Size; ++j) {
+            if (nums2[j] > nums1[i]) {
+                result[k++] = j;
+                
+                break;
+            }
+        }
+    }
+    
+    return result;
+}
 
 int main(int argc, char* argv[]) {
-    int nums[6] = {1,1,0,1,1,1};
+    int nums1[3] = {4, 1, 2};
+    int nums2[4] = {1, 3, 4, 2};
+    int returnSize = 0;
     
-    printf("%d\n", findMaxConsecutiveOnes(nums, 6));
+    int* result = nextGreaterElement(nums1, 3, nums2, 4, &returnSize);
+    
+    free(result);
     
     return 0;
 }
