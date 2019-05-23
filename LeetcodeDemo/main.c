@@ -3675,30 +3675,48 @@ int* constructRectangle(int area, int* returnSize){
  * 496. Next Greater Element I
  * URL: https://leetcode.com/problems/next-greater-element-i/
  */
-int* nextGreaterElement(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize){
-    int* result = (int*)malloc(sizeof(int) * nums1Size);
+int* nextGreaterElement(int* nums1, int nums1Size, int* nums2,
+                        int nums2Size, int* returnSize){
+    if (nums1 == NULL || nums1Size == 0 || nums2 == NULL || nums2Size == 0) {
+        (*returnSize) = 0;
+        
+        return NULL;
+    }
     
     (*returnSize) = nums1Size;
     
-    for (int i = 0; i < nums1Size; ++i)
-        result[i] = -1;
+    // find the max of nums2
+    int maxNum = -1;
     
-    qsort(nums1, sizeof(int), nums1Size, compareInt);
-    qsort(nums2, sizeof(int), nums2Size, compareInt);
+    for (int i = 0; i < nums2Size; ++i) {
+        if (maxNum < nums2[i])
+            maxNum = nums2[i];
+    }
     
-    int k = 0;
-    for (int i = 0; i < nums1Size; ++i) {
-        int j = 0;
-        for (j = 0; j < nums2Size; ++j) {
-            if (nums2[j] > nums1[i]) {
-                result[k++] = j;
+    // construct the hash
+    int* hashNumArr = (int*)malloc((maxNum + 1) * sizeof(int));
+    
+    for (int i = 0; i < nums2Size - 1; ++i) {
+        hashNumArr[nums2[i]] = -1;
+        
+        for (int j = i; j < nums2Size; ++j) {
+            if (nums2[j] > nums2[i]) {
+                hashNumArr[nums2[i]] = nums2[j];
                 
                 break;
             }
         }
     }
     
-    return result;
+    hashNumArr[nums2[nums2Size - 1]] = -1;
+    
+    int* returnArr = (int*)malloc((*returnSize) * sizeof(int));
+    
+    for (int i = 0; i < (*returnSize); ++i) {
+        returnArr[i] = hashNumArr[nums1[i]];
+    }
+    
+    return returnArr;
 }
 
 int main(int argc, char* argv[]) {
