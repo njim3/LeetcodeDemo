@@ -3719,6 +3719,112 @@ int* nextGreaterElement(int* nums1, int nums1Size, int* nums2,
     return returnArr;
 }
 
+/*
+ * 500. Keyboard Row
+ * URL: https://leetcode.com/problems/keyboard-row/
+ */
+char upper2LowerCase(char ch);
+char ** findWords(char ** words, int wordsSize, int* returnSize){
+    char* keyboardPosStr = "23321222122233111121131313";
+    
+    char** resultStrArr = (char**)malloc(sizeof(char*) * wordsSize);
+    
+    int len = -1;
+    for (int i = 0; i < wordsSize; ++i) {
+        char* currentStr = words[i];
+        char lastPos = keyboardPosStr[upper2LowerCase(currentStr[0]) - 'a'];
+        bool tmpRes = true;
+        
+        for (int j = 1; j < strlen(currentStr); ++j) {
+            if (keyboardPosStr[upper2LowerCase(currentStr[j]) - 'a'] != lastPos) {
+                tmpRes = false;
+                
+                break;
+            }
+        }
+        
+        if (tmpRes) {
+            char* tmpRes = (char*)malloc(sizeof(char) * (strlen(currentStr) + 1));
+            tmpRes[strlen(currentStr)] = '\0';
+            
+            memcpy(tmpRes, currentStr, strlen(currentStr));
+            
+            ++len;
+            resultStrArr[len] = tmpRes;
+        }
+    }
+    
+    (* returnSize) = len + 1;
+    
+    return resultStrArr;
+}
+
+char upper2LowerCase(char ch) {
+    if (ch >= 'A' && ch <= 'Z')
+        ch += ('a' - 'A');
+    
+    return ch;
+}
+
+/*
+ * 501. Find Mode in Binary Search Tree
+ * URL: https://leetcode.com/problems/find-mode-in-binary-search-tree/
+ */
+void preTraverse2GetVal(struct TreeNode* root, int** arr, int* len) {
+    if (!root)
+        return ;
+    
+    preTraverse2GetVal(root->left, arr, len);
+    
+    (* arr) = (int*)realloc((* arr), (*len + 1) * sizeof(int));
+    (* arr)[*len] = root->val;
+    
+    (*len) += 1;
+    
+    preTraverse2GetVal(root->right, arr, len);
+}
+
+int* findMode(struct TreeNode* root, int* returnSize){
+    int* preTraverseArr = (int*)calloc(0, sizeof(int));
+    int len = 0;
+    
+    preTraverse2GetVal(root, &preTraverseArr, &len);
+    
+    int* returnArr = (int*)calloc(0, sizeof(int));
+    int maxCount = 0;
+    int i = 0, j = 0;
+    
+    for (i = 0; i < len;) {
+        for (j = i + 1; j < len; ++j) {
+            if (preTraverseArr[j] != preTraverseArr[i])
+                break;
+        }
+        
+        int tmpCount = j - i;
+        
+        if (tmpCount == maxCount) {
+            returnArr = (int*)realloc(returnArr, (*returnSize + 1) * sizeof(int));
+            returnArr[*returnSize] = preTraverseArr[i];
+            
+            (*returnSize) += 1;
+        } else if (tmpCount > maxCount) {
+            if (returnArr)
+                free(returnArr);
+            
+            maxCount = tmpCount;
+            (*returnSize) = 1;
+            
+            returnArr = (int*)calloc(1, sizeof(int));
+            returnArr[0] = preTraverseArr[i];
+        }
+        
+        i = j;
+    }
+    
+    return returnArr;
+}
+
+
 int main(int argc, char* argv[]) {
     int nums1[3] = {4, 1, 2};
     int nums2[4] = {1, 3, 4, 2};
