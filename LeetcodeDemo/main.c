@@ -3824,6 +3824,28 @@ int* findMode(struct TreeNode* root, int* returnSize){
     return returnArr;
 }
 
+/*
+ * 504. Base 7
+ * URL: https://leetcode.com/problems/base-7/
+ */
+char * convertToBase7(int num){
+    long answer = 0;
+    int base = 1;
+    
+    while (num != 0) {
+        answer += (num % 7 * base);
+        
+        num /= 7;
+        base *= 10;
+    }
+    
+    char* str;
+    asprintf(&str, "%ld", answer);
+    
+    return str;
+}
+
+
 
 int main(int argc, char* argv[]) {
     int nums1[3] = {4, 1, 2};
