@@ -3845,7 +3845,218 @@ char * convertToBase7(int num){
     return str;
 }
 
+/*
+ * 506. Relative Ranks
+ * URL: https://leetcode.com/problems/relative-ranks/
+ */
+char ** findRelativeRanks(int* nums, int numsSize, int* returnSize) {
+    (*returnSize) = numsSize;
+    
+    int maxNum = -1;
+    
+    for (int i = 0; i < numsSize; ++i) {
+        maxNum = nums[i] > maxNum ? nums[i] : maxNum;
+    }
+    
+    int* mapArr = (int*)calloc(maxNum + 1, sizeof(int));
+    
+    for (int i = 0; i < numsSize; ++i)
+        mapArr[nums[i]] = 1;
+    
+    int rank = 0;
+    for (int i = maxNum; i >= 0; --i) {
+        if (mapArr[i] == 1)
+            mapArr[i] = (++rank);
+    }
+    
+    char** returnArr = (char**)malloc(numsSize * sizeof(char*));
+    
+    for (int i = 0; i < numsSize; ++i) {
+        returnArr[i] = (char*)malloc(sizeof(char) * 15);
+        
+        if (mapArr[nums[i]] == 1) {
+            sprintf(returnArr[i], "%s", "Gold Medal");
+        } else if (mapArr[nums[i]] == 2) {
+            sprintf(returnArr[i], "%s", "Silver Medal");
+        } else if (mapArr[nums[i]] == 3) {
+            sprintf(returnArr[i], "%s", "Bronze Medal");
+        } else {
+            sprintf(returnArr[i], "%i", mapArr[nums[i]]);
+        }
+    }
+    
+    return returnArr;
+}
 
+/*
+ * 507. Perfect Number
+ * URL: https://leetcode.com/problems/perfect-number/
+ */
+bool checkPerfectNumber(int num) {
+    if (num == 1)
+        return false;
+    
+    int sqrtNum = (int)sqrt(num);
+    int tempNum = num - 1;
+    
+    for (int i = 2; i <= sqrtNum; ++i) {
+        if (tempNum < 0)
+            return false;
+        
+        if (num % i == 0)
+            tempNum -= (i + num / i);
+    }
+    
+    return tempNum == 0;
+}
+
+/*
+ * 509. Fibonacci Number
+ * URL: https://leetcode.com/problems/fibonacci-number/
+ */
+int fib(int N){
+    if (N == 0)
+        return 0;
+    else if (N == 1)
+        return 1;
+    
+    return fib(N - 1) + fib(N - 2);
+}
+
+/*
+ * 520. Detect Capital
+ * URL: https://leetcode.com/problems/detect-capital/
+ */
+bool isAllLower(char* str);
+bool isAllUpper(char* str);
+bool detectCapitalUse(char * word){
+    int len = (int)strlen(word);
+    
+    if (len == 1)
+        return true;
+    
+    if (isAllUpper(word) || isAllLower(word))
+        return true;
+    
+    if ((word[0] >= 'A' && word[0] <= 'Z') && isAllLower(&word[1]))
+        return true;
+    
+    return false;
+}
+
+bool isAllLower(char* str) {
+    for (int i = 0; str[i] != '\0'; ++i) {
+        if (str[i] >= 'A' && str[i] <= 'Z')
+            return false;
+    }
+    
+    return true;
+}
+
+bool isAllUpper(char* str) {
+    for (int i = 0; str[i] != '\0'; ++i) {
+        if (str[i] >= 'a' && str[i] <= 'z')
+            return false;
+    }
+    
+    return true;
+}
+
+/*
+ * 521. Longest Uncommon Subsequence I
+ * URL: https://leetcode.com/problems/longest-uncommon-subsequence-i/
+ */
+int findLUSlength(char * a, char * b){
+    int aLen = (int)strlen(a);
+    int bLen = (int)strlen(b);
+    
+    if (aLen ==0 && bLen == 0)
+        return -1;
+    
+    if (aLen == 0 && bLen != 0)
+        return bLen;
+    
+    if (aLen != 0 && bLen == 0)
+        return aLen;
+    
+    return strcmp(a, b) == 0 ? -1 : (aLen > bLen ? aLen : bLen);
+}
+
+/*
+ * 530. Minimum Absolute Difference in BST
+ * URL: https://leetcode.com/problems/minimum-absolute-difference-in-bst/
+ */
+int lMaxNode(struct TreeNode* root);
+int rMinNode(struct TreeNode* root);
+int getMinimumDifference(struct TreeNode* root){
+    int lMinDiff = INT_MAX, rMinDiff = INT_MAX;
+    
+    if (root->left) {
+        lMinDiff = abs(root->val - lMaxNode(root->left));
+        
+        int lDiff = getMinimumDifference(root->left);
+        lMinDiff = lMinDiff > lDiff ? lDiff : lMinDiff;
+    }
+    
+    if (root->right) {
+        rMinDiff = abs(root->val - rMinNode(root->right));
+        
+        int rDiff = getMinimumDifference(root->right);
+        rMinDiff = rMinDiff > rDiff ? rDiff : rMinDiff;
+    }
+    
+    return lMinDiff > rMinDiff ? rMinDiff : lMinDiff;
+}
+
+int lMaxNode(struct TreeNode* root) {
+    if (root->right)
+        return lMaxNode(root->right);
+    
+    return root->val;
+}
+
+int rMinNode(struct TreeNode* root) {
+    if (root->left)
+        return rMinNode(root->left);
+    
+    return root->val;
+}
+
+/*
+* 532. K-diff Pairs in an Array
+* URL: https://leetcode.com/problems/k-diff-pairs-in-an-array/
+*/
+int cmpFunc(const int* a, const int* b) {
+    return (*a) - (*b);
+}
+
+int findPairs(int* nums, int numsSize, int k) {
+    if (k < 0 || numsSize < 2)
+        return 0;
+    
+    qsort(nums, numsSize, sizeof(int), cmpFunc);
+    
+    int answer = 0;
+    int temp = nums[0] - 1;
+    
+    for (int i = 0; i < numsSize; ++i) {
+        if (temp != nums[i]) {
+            temp = nums[i];
+            
+            for (int j = i + 1; j < numsSize; ++j) {
+                if (nums[i] + k == nums[j]) {
+                    ++answer;
+                    
+                    break;
+                } else if (nums[i] + k < nums[j]) {
+                    break;
+                }
+            }
+        }
+    }
+    
+    return answer;
+}
 
 int main(int argc, char* argv[]) {
     int nums1[3] = {4, 1, 2};
