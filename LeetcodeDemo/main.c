@@ -4058,14 +4058,133 @@ int findPairs(int* nums, int numsSize, int k) {
     return answer;
 }
 
+/*
+* 538. Convert BST to Greater Tree
+* URL: https://leetcode.com/problems/convert-bst-to-greater-tree/
+*/
+int visitTree(struct TreeNode* root, int val) {
+    if (!root)
+        return val;
+    
+    root->val += visitTree(root->right, val);
+    
+    return visitTree(root->left, root->val);
+}
+
+struct TreeNode* convertBST(struct TreeNode* root){
+    visitTree(root, 0);
+    
+    return root;
+}
+
+/*
+* 541. Reverse String II
+* URL: https://leetcode.com/problems/reverse-string-ii/
+*/
+void reversepart(char* s, int size) {
+    char* p = s, * q = s + size - 1;
+    
+    while (p < q) {
+        *p = *p ^ *q;
+        *q = *p ^ *q;
+        *p = *q ^ *p;
+        
+        ++p;
+        --q;
+    }
+}
+
+char * reverseStr(char * s, int k){
+    char* p = s;
+    char* end = s + strlen(s) - 1;
+    
+    while ( p + k - 1 <= end) {
+        reversepart(p, k);
+        
+        p += 2 * k;
+    }
+    
+    reversepart(p, (end - p) + 1);
+    
+    return s;
+}
+
+
+int treeHeight(struct TreeNode* root, int* answer) {
+    if (!root)
+        return 0;
+    
+    int lHeight = treeHeight(root->left, answer);
+    int rHeight = treeHeight(root->right, answer);
+    
+    int currentDiameter = lHeight + rHeight;
+    
+    *answer = (*answer) > currentDiameter ? (*answer) : currentDiameter;
+    
+    return lHeight > rHeight ? (lHeight + 1) : (rHeight + 1);
+}
+
+int diameterOfBinaryTree(struct TreeNode* root){
+    int answer = 0;
+    
+    treeHeight(root, &answer);
+    
+    return answer;
+}
+
+
+bool checkRecord(char * s) {
+    int countA = 0, countL = 0;
+    
+    while (*s != '\0') {
+        if (*s == 'A') {
+            ++countA;
+            countL = 0;
+            
+            if (countA > 1)
+                return false;
+        } else if (*s == 'L') {
+            ++countL;
+            
+            if (countL > 2)
+                return false;
+        } else
+            countL = 0;
+        
+        ++s;
+    }
+    
+    return true;
+}
+
+
+void reversepartw(int start, int end, char* s) {
+    while (start < end) {
+        s[start] = s[start] ^ s[end];
+        s[end] = s[start] ^ s[end];
+        s[start] = s[end] ^ s[start];
+        
+        ++start;
+        --end;
+    }
+}
+
+char * reverseWords(char * s){
+    int sLen = (int)strlen(s), index = 0;
+    
+    for (int i = 0; i <= sLen; ++i) {
+        if (s[i] == ' ' || s[i] == '\0') {
+            reversepartw(index, i - 1, s);
+            
+            index = i + 1;
+        }
+    }
+    
+    return s;
+}
+
 int main(int argc, char* argv[]) {
-    int nums1[3] = {4, 1, 2};
-    int nums2[4] = {1, 3, 4, 2};
-    int returnSize = 0;
-    
-    int* result = nextGreaterElement(nums1, 3, nums2, 4, &returnSize);
-    
-    free(result);
+    reverseWords("Let's take LeetCode contest");
     
     return 0;
 }
