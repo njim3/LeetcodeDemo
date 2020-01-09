@@ -4109,7 +4109,10 @@ char * reverseStr(char * s, int k){
     return s;
 }
 
-
+/*
+* 543. Diameter of Binary Tree
+* URL: https://leetcode.com/problems/diameter-of-binary-tree/
+*/
 int treeHeight(struct TreeNode* root, int* answer) {
     if (!root)
         return 0;
@@ -4132,7 +4135,10 @@ int diameterOfBinaryTree(struct TreeNode* root){
     return answer;
 }
 
-
+/*
+* 551. Student Attendance Record I
+* URL: https://leetcode.com/problems/student-attendance-record-i/
+*/
 bool checkRecord(char * s) {
     int countA = 0, countL = 0;
     
@@ -4157,7 +4163,10 @@ bool checkRecord(char * s) {
     return true;
 }
 
-
+/*
+* 557. Reverse Words in a String III
+* URL: https://leetcode.com/problems/reverse-words-in-a-string-iii/
+*/
 void reversepartw(int start, int end, char* s) {
     while (start < end) {
         s[start] = s[start] ^ s[end];
@@ -4182,6 +4191,72 @@ char * reverseWords(char * s){
     
     return s;
 }
+
+/*
+* 561. Array Partition I
+* URL: https://leetcode.com/problems/array-partition-i/
+*/
+int arrayPairSum(int* nums, int numsSize){
+    short int bucket[20001] = {0};
+    
+    int sum = 0, count = 0;
+    
+    for (int i = 0; i < numsSize; ++i) {
+        ++bucket[nums[i] + 10000];
+    }
+    
+    for (int i = 0; i < 20001; bucket[i] == 0 ? ++i : i) {
+        if (bucket[i] > 0) {
+            if (count % 2 == 0)
+                sum += (i - 10000);
+            
+            --bucket[i];
+            ++count;
+        }
+    }
+    
+    return sum;
+}
+
+/*
+* 563. Binary Tree Tilt
+* URL: https://leetcode.com/problems/binary-tree-tilt/
+*/
+int treeSum(struct TreeNode* node) {
+    if (!node)
+        return 0;
+    
+    return node->val + treeSum(node->left) + treeSum(node->right);
+}
+
+int findTilt(struct TreeNode* root) {
+    if (!root)
+        return 0;
+    
+    return abs(treeSum(root->left) - treeSum(root->right)) +
+    findTilt(root->left) + findTilt(root->right);
+}
+
+/*
+* 566. Reshape the Matrix
+* URL: https://leetcode.com/problems/reshape-the-matrix/
+*/
+int** matrixReshape(int** nums, int numsSize, int* numsColSize,
+                    int r, int c, int* returnSize, int** returnColumnSizes){
+    if (numsSize * (* numsColSize) != r * c) {
+        (* returnSize) = numsSize;
+        
+        (* returnColumnSizes) = (int*)malloc(sizeof(int) * numsSize);
+        
+        for (int i = 0; i < numsSize; ++i)
+            (* returnColumnSizes)[i] = (* numsColSize);
+        
+        return nums;
+    }
+    
+    return NULL;
+}
+
 
 int main(int argc, char* argv[]) {
     reverseWords("Let's take LeetCode contest");
