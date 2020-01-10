@@ -4254,7 +4254,28 @@ int** matrixReshape(int** nums, int numsSize, int* numsColSize,
         return nums;
     }
     
-    return NULL;
+    int** returnMatrix = (int**)malloc(r * sizeof(int*));
+    
+    (* returnColumnSizes) = (int*)malloc(r * sizeof(int));
+    
+    int index = 0;
+    
+    for (int i = 0; i < r; ++i) {
+        (* returnColumnSizes)[i] = c;
+        
+        returnMatrix[i] = (int*)malloc(sizeof(int) * c);
+        
+        for (int j = 0; j < c; ++j) {
+            returnMatrix[i][j] =
+            nums[index / (*numsColSize)][index % (*numsColSize)];
+            
+            ++index;
+        }
+    }
+    
+    (*returnSize) = r;
+    
+    return returnMatrix;
 }
 
 
